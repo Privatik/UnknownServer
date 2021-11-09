@@ -8,5 +8,6 @@ data class User(
     @BsonId
     val id: String = ObjectId().toString(),
     val email: String,
-    val password: String
+    val password: String,
+    val isActive: Boolean = false
 )

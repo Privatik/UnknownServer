@@ -4,7 +4,7 @@ import com.io.model.User
 
 interface LoginRepository {
 
-    suspend fun login(): User?
+    suspend fun login(email: String, password: String): User?
 
-    suspend fun logout(): Boolean
+    suspend fun logout(id: String): Boolean
 }
