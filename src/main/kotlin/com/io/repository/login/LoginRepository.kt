@@ -6,5 +6,5 @@ interface LoginRepository {
 
     suspend fun login(email: String, password: String): User?
 
-    suspend fun logout(id: String): Boolean
+    suspend fun logout(id: String): User?
 }

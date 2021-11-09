@@ -1,5 +1,8 @@
 package com.io.plugins
 
+import com.io.route.chatRoutes
+import com.io.route.loginRoutes
+import com.io.route.messageRoutes
 import com.io.route.userRoutes
 import io.ktor.routing.*
 import io.ktor.http.*
@@ -13,5 +16,8 @@ fun Application.configureRouting() {
 
     routing {
         userRoutes()
+        loginRoutes()
+        chatRoutes()
+        messageRoutes()
     }
 }

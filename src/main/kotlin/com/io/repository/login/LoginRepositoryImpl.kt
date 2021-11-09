@@ -3,6 +3,7 @@ package com.io.repository.login
 import com.io.model.User
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
+import org.litote.kmongo.setValue
 
 class LoginRepositoryImpl(
     db: CoroutineDatabase
@@ -10,11 +11,21 @@ class LoginRepositoryImpl(
 
     private val users = db.getCollection<User>()
 
-    override suspend fun login(email: String, password: String): User?  =
-        users.findOne(User::email eq email, User::password eq password)
+    override suspend fun login(email: String, password: String): User? {
+        val user = users.findOne(User::email eq email, User::password eq password)
+            ?: kotlin.run {
+                return null
+            }
 
-    override suspend fun logout(id: String): Boolean {
-       // users.updateOneById(id = id, update = )
-        return true
+        return user
+    }
+
+    override suspend fun logout(id: String): User? {
+        val user = users.findOne(User::id eq id)
+            ?: kotlin.run {
+                return null
+            }
+
+        return user
     }
 }
