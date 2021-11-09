@@ -1,9 +1,7 @@
 package com.io
 
-import com.io.di.mainModule
-import io.ktor.application.*
 import com.io.plugins.*
-import org.koin.ktor.ext.Koin
+import io.ktor.application.*
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -16,7 +14,5 @@ fun Application.module() {
     configureMonitoring()
     configureHTTP()
     configureSecurity()
-    install(Koin) {
-        modules(mainModule)
-    }
+    configureKoin()
 }

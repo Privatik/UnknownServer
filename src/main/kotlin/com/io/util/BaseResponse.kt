@@ -1,9 +1,9 @@
-package com.io.data.response
+package com.io.util
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BaseResponse(
+data class BaseResponse<T>(
     val isSuccessful: Boolean,
-    val message: String? = null
+    val message: T? = null
 )

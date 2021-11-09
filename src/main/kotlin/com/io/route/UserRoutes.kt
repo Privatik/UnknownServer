@@ -1,7 +1,10 @@
 package com.io.route
 
 import com.io.controller.user.UserController
-import com.io.data.response.BaseResponse
+import com.io.data.mapper.toModel
+import com.io.data.mapper.toResponse
+import com.io.data.model.user.UserRequest
+import com.io.util.BaseResponse
 import com.io.model.User
 import io.ktor.application.*
 import io.ktor.http.*
@@ -13,34 +16,23 @@ import org.koin.ktor.ext.inject
 
 fun Route.userRoutes() {
     val userController: UserController by inject()
-    route("/api/user/create") {
-        post {
-            val request = call.receiveOrNull<User>() ?: kotlin.run {
+
+    route("/api") {
+        post("/user/create") {
+            val request = call.receiveOrNull<UserRequest>() ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
-            if(request.email.isBlank() || request.password.isBlank()) {
-                call.respond(
-                    BaseResponse(
-                        isSuccessful = false,
-                        message = "Filed empty"
-                    )
-                )
-                return@post
-            }
-            userController.createUser(
-                User(
-                    email = request.email,
-                    password = request.password
-                )
-            )
             call.respond(
-                BaseResponse(isSuccessful = true)
+                BaseResponse<User>(
+                    isSuccessful = true,
+                    message = userController.createUser(request.toModel())
+                )
             )
         }
 
-        get{
-            call.respond(userController.getAll())
+        get("users"){
+            call.respond(userController.getAll().map { it.toResponse() })
         }
     }
 }

@@ -1,10 +1,9 @@
-package com.io.controller.user
+package com.io.repository.user
 
 import com.io.model.User
 import com.io.util.BaseResponse
 
-interface UserController {
-
+interface UserRepository {
     suspend fun createUser(user: User): User?
 
     suspend fun getUserById(id: String): User?
