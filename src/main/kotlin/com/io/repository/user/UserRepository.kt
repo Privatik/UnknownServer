@@ -9,6 +9,4 @@ interface UserRepository {
     suspend fun getUserById(id: String): User?
 
     suspend fun changeActive(id: String, isActive: Boolean)
-
-    suspend fun getAll(): List<User>
 }

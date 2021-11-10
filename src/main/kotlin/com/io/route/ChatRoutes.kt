@@ -26,7 +26,7 @@ fun Route.chatRoutes() {
                 return@post
             }
 
-            val response = chatController.createChat(request.toModel())
+            val response = chatController.createChat(request)
 
             call.respond(
                 BaseResponse(

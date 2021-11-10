@@ -27,6 +27,4 @@ class UserRepositoryImpl(
     override suspend fun changeActive(id: String, isActive: Boolean) {
         users.updateOneById(id = id, update = setValue(User::isActive, isActive))
     }
-
-    override suspend fun getAll(): List<User> = users.find().toList()
 }

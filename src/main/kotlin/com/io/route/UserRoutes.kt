@@ -25,7 +25,7 @@ fun Route.userRoutes() {
                 return@post
             }
 
-            val response = userController.createUser(request.toModel())
+            val response = userController.createUser(request)
             call.respond(
                 BaseResponse(
                     isSuccessful = response.first != null,
@@ -35,22 +35,18 @@ fun Route.userRoutes() {
         }
 
         post(UserApiConstant.USER_GET_BY_ID) {
-            val request = call.receiveOrNull<String>() ?: kotlin.run {
+            val requestID = call.receiveOrNull<String>() ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest)
                 return@post
             }
 
-            val response = userController.getUserById(request)
+            val response = userController.getUserById(requestID)
             call.respond(
                 BaseResponse(
                     isSuccessful = response.first != null,
                     message = response.first?.toResponse() ?: response.second
                 )
             )
-        }
-
-        get("users"){
-            call.respond(userController.getAll().map { it.toResponse() })
         }
     }
 }

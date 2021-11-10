@@ -6,4 +6,7 @@ import kotlinx.serialization.Serializable
 data class LoginRequest(
     val email: String,
     val password: String
-)
+) {
+
+    fun inBlank() : Boolean = email.isBlank() || password.isBlank()
+}

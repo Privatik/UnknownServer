@@ -1,5 +1,7 @@
 package com.io.controller.user
 
+import com.io.data.mapper.toModel
+import com.io.data.model.user.UserRequest
 import com.io.model.User
 import com.io.repository.user.UserRepository
 import com.io.util.BaseResponse
@@ -13,12 +15,12 @@ class UserControllerImpl(
     private val userRepository: UserRepository
 ): UserController {
 
-    override suspend fun createUser(user: User): Pair<User?, ExceptionMessage?> {
-        if(user.email.isBlank() || user.password.isBlank()) {
+    override suspend fun createUser(user: UserRequest): Pair<User?, ExceptionMessage?> {
+        if(user.inBlank()) {
             return Pair(null, ExceptionMessage.EXCEPTION_USER_FIELD_EMPTY)
         }
 
-        val userFind = userRepository.createUser(user)
+        val userFind = userRepository.createUser(user.toModel())
         return if (userFind != null){
             Pair(userFind, null)
         } else {
@@ -33,6 +35,4 @@ class UserControllerImpl(
 
         return Pair(user, null)
     }
-
-    override suspend fun getAll(): List<User> = userRepository.getAll()
 }

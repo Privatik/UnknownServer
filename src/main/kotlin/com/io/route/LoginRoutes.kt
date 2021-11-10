@@ -24,10 +24,7 @@ fun Route.loginRoutes() {
                 return@post
             }
 
-            val response = loginController.login(
-                email = request.email,
-                password = request.password
-            )
+            val response = loginController.login(request)
 
             call.respond(
                 BaseResponse(
