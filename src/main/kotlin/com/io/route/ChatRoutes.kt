@@ -4,10 +4,12 @@ import com.io.controller.chat.ChatController
 import com.io.data.mapper.toModel
 import com.io.data.mapper.toResponse
 import com.io.data.model.chat.ChatRequest
+import com.io.data.model.chat.ChatResponse
 import com.io.data.model.user.UserRequest
 import com.io.util.BASE_API
 import com.io.util.BaseResponse
 import com.io.util.ChatApiConstant
+import com.io.util.response
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -28,12 +30,7 @@ fun Route.chatRoutes() {
 
             val response = chatController.createChat(request)
 
-            call.respond(
-                BaseResponse(
-                    isSuccessful = response.first != null,
-                    message = response.first?.toResponse() ?: response.second
-                )
-            )
+            call.response<ChatResponse>(response.first?.toResponse(), response.second)
         }
 
         post(ChatApiConstant.CHAT_GET_BY_ID) {
@@ -44,12 +41,7 @@ fun Route.chatRoutes() {
 
             val response = chatController.getChat(request)
 
-            call.respond(
-                BaseResponse(
-                    isSuccessful = response.first != null,
-                    message = response.first?.toResponse() ?: response.second
-                )
-            )
+            call.response<ChatResponse>(response.first?.toResponse(), response.second)
         }
     }
 }

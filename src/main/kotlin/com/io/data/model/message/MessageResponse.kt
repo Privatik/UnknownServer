@@ -10,7 +10,13 @@ data class MessageResponse(
     val userId: String,
     val chatId: String,
     val text: String,
-    val type: MessageType,
+    val type: MessageTypeResponse,
     val timeSend: String,
     val timeUpdate: String?
 )
+
+@Serializable
+enum class MessageTypeResponse{
+    TEXT,
+    IMAGE
+}

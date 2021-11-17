@@ -14,14 +14,11 @@ class ChatRepositoryImpl(
     private val chats = db.getCollection<Chat>()
 
     override suspend fun findChatWithCurrentUser(userId: List<String>): Boolean {
-        chats.findOne(Chat::companionsId eq userId) ?: kotlin.run {
-            return false
-        }
-        return true
+        return false
     }
 
     override suspend fun createChat(chat: Chat): Chat {
-        chats.insertOne(chat)
+        val chatN = chats.insertOne(chat)
         return chat
     }
 

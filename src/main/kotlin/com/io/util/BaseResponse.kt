@@ -7,3 +7,4 @@ data class BaseResponse<T>(
     val isSuccessful: Boolean,
     val message: T? = null
 )
+

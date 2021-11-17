@@ -10,7 +10,7 @@ data class MessageRequest (
     val userId: String,
     val chatId: String,
     val text: String,
-    val type: MessageType,
+    val type: MessageTypeRequest,
     val timeSend: String,
     val timeUpdate: String?
 ) {
@@ -19,4 +19,10 @@ data class MessageRequest (
         userId.isBlank() || chatId.isBlank() || text.isBlank() || timeSend.isBlank()
 
     fun isBlankWithId(): Boolean = id?.isBlank() == true || isBlank()
+}
+
+@Serializable
+enum class MessageTypeRequest{
+    TEXT,
+    IMAGE
 }
