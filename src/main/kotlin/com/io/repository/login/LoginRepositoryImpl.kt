@@ -11,13 +11,17 @@ class LoginRepositoryImpl(
 
     private val users = db.getCollection<User>()
 
-    override suspend fun login(email: String, password: String): User? {
-        val user = users.findOne(User::email eq email, User::password eq password)
+    override suspend fun login(email: String): User? {
+        val user = users.findOne(User::email eq email)
             ?: kotlin.run {
                 return null
             }
 
         return user
+    }
+
+    override suspend fun isCorrectPassword(user: User, password: String):Boolean {
+        return users.findOne(User::email eq user.email, User::password eq password) != null
     }
 
     override suspend fun logout(id: String): User? {

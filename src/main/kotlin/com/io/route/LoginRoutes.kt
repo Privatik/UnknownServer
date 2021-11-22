@@ -2,10 +2,10 @@ package com.io.route
 
 import com.io.controller.login.LoginController
 import com.io.data.mapper.toResponse
+import com.io.data.model.login.LoginIdRequest
 import com.io.data.model.login.LoginRequest
-import com.io.util.BASE_API
-import com.io.util.BaseResponse
-import com.io.util.LoginApiConstant
+import com.io.data.model.user.UserResponse
+import com.io.util.*
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.request.*
@@ -17,37 +17,25 @@ fun Route.loginRoutes() {
 
     val loginController: LoginController by inject()
 
-    route(BASE_API){
-        post(LoginApiConstant.LOGIN) {
-            val request = call.receiveOrNull<LoginRequest>() ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
-
-            val response = loginController.login(request)
-
-            call.respond(
-                BaseResponse(
-                    isSuccessful = response.first != null,
-                    message = response.second ?: response.first?.toResponse()
-                )
-            )
+    post(LoginApiConstant.LOGIN) {
+        val request = call.receiveOrNull<LoginRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
         }
 
-        post(LoginApiConstant.LOGOUT) {
-            val requestID = call.receiveOrNull<String>() ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
+        val response = loginController.login(request)
 
-            val response = loginController.logout(requestID)
+        call.response<UserResponse>(response.first?.toResponse(), response.second)
+    }
 
-            call.respond(
-                BaseResponse(
-                    isSuccessful = response.first,
-                    message = response.second
-                )
-            )
+    post(LoginApiConstant.LOGOUT) {
+        val request = call.receiveOrNull<LoginIdRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
         }
+
+        val response = loginController.logout(request)
+
+        call.responseBoolean(response.first, response.second)
     }
 }

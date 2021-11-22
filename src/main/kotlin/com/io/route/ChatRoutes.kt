@@ -3,6 +3,7 @@ package com.io.route
 import com.io.controller.chat.ChatController
 import com.io.data.mapper.toModel
 import com.io.data.mapper.toResponse
+import com.io.data.model.chat.ChatIdRequest
 import com.io.data.model.chat.ChatRequest
 import com.io.data.model.chat.ChatResponse
 import com.io.data.model.user.UserRequest
@@ -21,27 +22,25 @@ fun Route.chatRoutes() {
 
     val chatController: ChatController by inject()
 
-    route(BASE_API){
-        post(ChatApiConstant.CHAT_CREATE) {
-            val request = call.receiveOrNull<ChatRequest>() ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
-
-            val response = chatController.createChat(request)
-
-            call.response<ChatResponse>(response.first?.toResponse(), response.second)
+    post(ChatApiConstant.CHAT_CREATE) {
+        val request = call.receiveOrNull<ChatRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
         }
 
-        post(ChatApiConstant.CHAT_GET_BY_ID) {
-            val request = call.receiveOrNull<String>() ?: kotlin.run {
-                call.respond(HttpStatusCode.BadRequest)
-                return@post
-            }
+        val response = chatController.createChat(request)
 
-            val response = chatController.getChat(request)
+        call.response<ChatResponse>(response.first?.toResponse(), response.second)
+    }
 
-            call.response<ChatResponse>(response.first?.toResponse(), response.second)
+    post(ChatApiConstant.CHAT_GET_BY_ID) {
+        val request = call.receiveOrNull<ChatIdRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
         }
+
+        val response = chatController.getChat(request)
+
+        call.response<ChatResponse>(response.first?.toResponse(), response.second)
     }
 }

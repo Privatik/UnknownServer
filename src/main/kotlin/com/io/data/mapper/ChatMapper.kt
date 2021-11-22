@@ -8,12 +8,14 @@ import com.io.model.User
 
 fun ChatRequest.toModel(): Chat =
     Chat(
-        companionsId = this.companionsId
+        firstCompanionId = this.firstCompanionId,
+        secondCompanionId = this.secondCompanionId
     )
 
 fun Chat.toResponse(): ChatResponse =
     ChatResponse(
         id = this.id,
-        companionsId = this.companionsId,
+        firstCompanionId = this.firstCompanionId,
+        secondCompanionId = this.secondCompanionId,
         lastMessage = this.lastMessage?.toResponse()
     )

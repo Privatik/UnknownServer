@@ -4,6 +4,7 @@ import com.io.route.chatRoutes
 import com.io.route.loginRoutes
 import com.io.route.messageRoutes
 import com.io.route.userRoutes
+import com.io.util.BASE_API
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.content.*
@@ -15,9 +16,11 @@ import io.ktor.request.*
 fun Application.configureRouting() {
 
     routing {
-        userRoutes()
-        loginRoutes()
-        chatRoutes()
-        messageRoutes()
+        route(BASE_API){
+            userRoutes()
+            loginRoutes()
+            chatRoutes()
+            messageRoutes()
+        }
     }
 }

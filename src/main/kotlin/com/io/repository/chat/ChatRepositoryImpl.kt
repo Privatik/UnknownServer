@@ -2,6 +2,7 @@ package com.io.repository.chat
 
 import com.io.model.Chat
 import com.io.model.User
+import org.bson.types.ObjectId
 import org.litote.kmongo.contains
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.insertOne
@@ -13,14 +14,13 @@ class ChatRepositoryImpl(
 
     private val chats = db.getCollection<Chat>()
 
-    override suspend fun findChatWithCurrentUser(userId: List<String>): Boolean {
-        return false
-    }
-
     override suspend fun createChat(chat: Chat): Chat {
-        val chatN = chats.insertOne(chat)
+        chats.insertOne(chat)
         return chat
     }
 
     override suspend fun getChat(id: String): Chat? = chats.findOne(Chat::id eq id)
+
+    override suspend fun getChat(firstUserId: String, secondUserId: String): Chat? =
+        chats.findOne(Chat::firstCompanionId eq firstUserId, Chat::secondCompanionId eq secondUserId)
 }

@@ -9,5 +9,6 @@ data class User(
     val id: String = ObjectId().toString(),
     val email: String,
     val password: String,
+    val chatsIds: List<String> = emptyList(),
     val isActive: Boolean = false
 )

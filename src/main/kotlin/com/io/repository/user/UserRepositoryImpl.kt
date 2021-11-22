@@ -22,7 +22,7 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun getUserById(id: String): User? = users.findOne(User::id eq id)
+    override suspend fun getUserById(id: String): User? = users.findOneById(id)
 
     override suspend fun changeActive(id: String, isActive: Boolean) {
         users.updateOneById(id = id, update = setValue(User::isActive, isActive))

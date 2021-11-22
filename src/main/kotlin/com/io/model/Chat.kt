@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 data class Chat(
     @BsonId
     val id: String = ObjectId().toString(),
-    val companionsId: List<String> = emptyList(),
+    val firstCompanionId: String,
+    val secondCompanionId: String,
     val lastMessage: Message? = null
 )

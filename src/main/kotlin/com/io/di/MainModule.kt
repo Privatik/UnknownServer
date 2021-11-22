@@ -28,7 +28,7 @@ val controllerModule = module {
     }
 
     single<ChatController> {
-        ChatControllerImpl(get())
+        ChatControllerImpl(get(), get())
     }
 }
 

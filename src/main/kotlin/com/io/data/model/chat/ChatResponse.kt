@@ -8,6 +8,7 @@ import org.bson.types.ObjectId
 @Serializable
 data class ChatResponse(
     val id: String,
-    val companionsId: List<String>,
+    val firstCompanionId: String,
+    val secondCompanionId: String,
     val lastMessage: MessageResponse?
 )
