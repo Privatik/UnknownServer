@@ -17,12 +17,13 @@ class MessageRepositoryImpl(
         return message
     }
 
-    override suspend fun updateMessage(id :String, timeUpdate: String): Message? {
+    override suspend fun updateMessage(id: String, text: String, timeUpdate: String): Message? {
         messages.updateOneById(id, update = setValue(Message::timeUpdate, timeUpdate))
-        return messages.findOne(Message::id eq id)
+        messages.updateOneById(id, update = setValue(Message::text,text))
+        return messages.findOneById(id)
     }
 
     override suspend fun deleteMessage(id: String): Boolean {
-        return messages.deleteOne(Message::id eq id).wasAcknowledged()
+        return messages.deleteOneById(id).wasAcknowledged()
     }
 }

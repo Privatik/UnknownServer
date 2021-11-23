@@ -5,6 +5,13 @@ import kotlinx.serialization.Serializable
 import org.bson.types.ObjectId
 
 @Serializable
+data class MessagesPagingRequest(
+    val chaId: String,
+    val page: Int,
+    val pageSize: Int
+)
+
+@Serializable
 data class MessageRequest (
     val id: String? = null,
     val userId: String,

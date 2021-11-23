@@ -1,5 +1,7 @@
 package com.io.util
 
+import org.koin.core.logger.MESSAGE
+
 const val BASE_API = "/api"
 
 object UserApiConstant{
@@ -23,6 +25,7 @@ object ChatApiConstant{
 
 object MessageApiConstant{
 
+    const val MESSAGES_GEt_BY_CHAT_ID = "/messages"
     const val MESSAGE_SEND = "/message/send"
     const val MESSAGE_UPDATE = "/message/update"
     const val MESSAGE_DELETE = "/message/delete"

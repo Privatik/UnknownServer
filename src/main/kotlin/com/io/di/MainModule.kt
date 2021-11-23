@@ -4,12 +4,16 @@ import com.io.controller.chat.ChatController
 import com.io.controller.chat.ChatControllerImpl
 import com.io.controller.login.LoginController
 import com.io.controller.login.LoginControllerImpl
+import com.io.controller.message.MessageController
+import com.io.controller.message.MessageControllerImpl
 import com.io.controller.user.UserController
 import com.io.controller.user.UserControllerImpl
 import com.io.repository.chat.ChatRepository
 import com.io.repository.chat.ChatRepositoryImpl
 import com.io.repository.login.LoginRepository
 import com.io.repository.login.LoginRepositoryImpl
+import com.io.repository.message.MessageRepository
+import com.io.repository.message.MessageRepositoryImpl
 import com.io.repository.user.UserRepository
 import com.io.repository.user.UserRepositoryImpl
 import com.io.util.Constants
@@ -30,6 +34,10 @@ val controllerModule = module {
     single<ChatController> {
         ChatControllerImpl(get(), get())
     }
+
+    single<MessageController> {
+        MessageControllerImpl(get(), get(), get())
+    }
 }
 
 val repositoryModule = module {
@@ -43,6 +51,10 @@ val repositoryModule = module {
 
     single<ChatRepository> {
         ChatRepositoryImpl(get())
+    }
+
+    single<MessageRepository> {
+        MessageRepositoryImpl(get())
     }
 }
 
