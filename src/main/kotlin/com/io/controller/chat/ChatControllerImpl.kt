@@ -3,6 +3,7 @@ package com.io.controller.chat
 import com.io.data.mapper.toModel
 import com.io.data.model.chat.ChatIdRequest
 import com.io.data.model.chat.ChatRequest
+import com.io.data.model.chat.ChatsPagingRequest
 import com.io.model.Chat
 import com.io.repository.chat.ChatRepository
 import com.io.repository.user.UserRepository
@@ -27,6 +28,8 @@ class ChatControllerImpl(
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_HAS_ALREADY)
         } else {
             val chatCreate = chatRepository.createChat(chat.toModel())
+            userRepository.addChat(chat.firstCompanionId, chatCreate.id)
+            userRepository.addChat(chat.secondCompanionId, chatCreate.id)
             Pair(chatCreate, null)
         }
     }
@@ -40,5 +43,19 @@ class ChatControllerImpl(
         }
 
         return Pair(chatFind, null)
+    }
+
+    override suspend fun getChats(chatPaging: ChatsPagingRequest): Pair<List<Chat>?, ExceptionMessage?> {
+        return if (userRepository.getUserById(chatPaging.userId) == null){
+            Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+        } else {
+            if (chatPaging.page < 0 || chatPaging.pageSize < 1){
+                Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_CORRECT_DATA)
+            } else {
+                val setChatsId = userRepository.getChatsId(chatPaging.userId) ?: return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+                val listChats = chatRepository.getChats(setChatsId, chatPaging.page, chatPaging.pageSize)
+                Pair(listChats, null)
+            }
+        }
     }
 }

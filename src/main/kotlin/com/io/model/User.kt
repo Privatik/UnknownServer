@@ -9,6 +9,6 @@ data class User(
     val id: String = ObjectId().toString(),
     val email: String,
     val password: String,
-    val chatsIds: List<String> = emptyList(),
+    val chatsIds: MutableSet<String> = mutableSetOf(),
     val isActive: Boolean = false
 )

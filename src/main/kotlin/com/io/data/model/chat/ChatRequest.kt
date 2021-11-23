@@ -15,3 +15,10 @@ data class ChatRequest(
 data class ChatIdRequest(
     val id: String
 )
+
+@Serializable
+data class ChatsPagingRequest(
+    val userId: String,
+    val page: Int,
+    val pageSize: Int
+)

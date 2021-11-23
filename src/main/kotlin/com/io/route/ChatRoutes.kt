@@ -6,6 +6,7 @@ import com.io.data.mapper.toResponse
 import com.io.data.model.chat.ChatIdRequest
 import com.io.data.model.chat.ChatRequest
 import com.io.data.model.chat.ChatResponse
+import com.io.data.model.chat.ChatsPagingRequest
 import com.io.data.model.user.UserRequest
 import com.io.util.BASE_API
 import com.io.util.BaseResponse
@@ -42,5 +43,16 @@ fun Route.chatRoutes() {
         val response = chatController.getChat(request)
 
         call.response<ChatResponse>(response.first?.toResponse(), response.second)
+    }
+
+    post(ChatApiConstant.CHATS_GET_BY_USER_ID) {
+        val request = call.receiveOrNull<ChatsPagingRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
+        }
+
+        val response = chatController.getChats(request)
+
+        call.response<List<ChatResponse>>(response.first?.map { it.toResponse() }, response.second)
     }
 }

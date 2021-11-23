@@ -18,6 +18,7 @@ object ChatApiConstant{
 
     const val CHAT_CREATE = "/chat/create"
     const val CHAT_GET_BY_ID = "/chat"
+    const val CHATS_GET_BY_USER_ID = "/chats"
 }
 
 object MessageApiConstant{
