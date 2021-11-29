@@ -11,8 +11,8 @@ data class Message(
     val chatId: String,
     val text: String,
     val type: MessageType,
-    val timeSend: String,
-    val timeUpdate: String? = null
+    val timeSend: Long,
+    val timeUpdate: Long? = null
 )
 
 enum class MessageType{

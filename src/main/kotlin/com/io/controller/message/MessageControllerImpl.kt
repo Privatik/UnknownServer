@@ -20,7 +20,7 @@ class MessageControllerImpl(
             return Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
-            return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
         else if (userRepository.getUserById(message.userId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
@@ -35,7 +35,7 @@ class MessageControllerImpl(
             return Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
-            return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
         else if (userRepository.getUserById(message.userId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
@@ -61,7 +61,7 @@ class MessageControllerImpl(
             return Pair(false, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
-            return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Pair(false, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
         else if (userRepository.getUserById(message.userId) == null){
             return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
@@ -73,6 +73,19 @@ class MessageControllerImpl(
     }
 
     override suspend fun getMessages(messagePaging: MessagesPagingRequest): Pair<List<Message>?, ExceptionMessage?> {
-        return Pair(null, null)
+        return if (chatRepository.getChat(messagePaging.chatId) == null){
+            Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
+        } else {
+            if (messagePaging.page < 0 || messagePaging.pageSize < 1){
+                Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_DONT_CORRECT_DATA)
+            } else {
+                val list = messageRepository.getMessages(
+                    messagePaging.chatId,
+                    messagePaging.page,
+                    messagePaging.pageSize
+                )
+                Pair(list, null)
+            }
+        }
     }
 }

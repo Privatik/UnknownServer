@@ -11,8 +11,8 @@ data class MessageResponse(
     val chatId: String,
     val text: String,
     val type: MessageTypeResponse,
-    val timeSend: String,
-    val timeUpdate: String?
+    val timeSend: Long,
+    val timeUpdate: Long?
 )
 
 @Serializable

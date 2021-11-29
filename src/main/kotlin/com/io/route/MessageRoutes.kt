@@ -6,6 +6,7 @@ import com.io.data.model.chat.ChatResponse
 import com.io.data.model.message.MessageRequest
 import com.io.data.model.message.MessageResponse
 import com.io.data.model.message.MessagesPagingRequest
+import com.io.model.Message
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.http.*
@@ -56,6 +57,8 @@ fun Route.messageRoutes() {
             return@post
         }
 
+        val response = messageController.getMessages(request)
 
+        call.response<List<MessageResponse>>(response.first?.map { it.toResponse() }, response.second)
     }
 }
