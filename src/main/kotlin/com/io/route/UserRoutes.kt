@@ -40,10 +40,12 @@ fun Route.userRoutes(
 
         val response = userController.createUser(request)
         if (response.first != null){
+            val timeSkip = 1000 * 60 * 5
+
             val token = JWT.create()
                 .withClaim("email", response.first?.email)
                 .withIssuer(jwtIssuer)
-                .withExpiresAt(Date(System.currentTimeMillis() + 5000))
+                .withExpiresAt(Date(System.currentTimeMillis() + timeSkip))
                 .withAudience(jwtAudience)
                 .sign(Algorithm.HMAC256(jwtSecret))
 
