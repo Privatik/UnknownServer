@@ -8,11 +8,11 @@ fun main(args: Array<String>): Unit =
 
 @Suppress("unused")
 fun Application.module() {
+    configureKoin()
+    configureSecurity()
     configureRouting()
     configureSockets()
+    configureHTTP()
     configureSerialization()
     configureMonitoring()
-    configureHTTP()
-    configureSecurity()
-    configureKoin()
 }

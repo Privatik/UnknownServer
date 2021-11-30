@@ -6,6 +6,7 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class MessagesPagingRequest(
+    val userId: String,
     val chatId: String,
     val page: Int,
     val pageSize: Int

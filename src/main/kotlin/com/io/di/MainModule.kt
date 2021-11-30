@@ -16,6 +16,7 @@ import com.io.repository.message.MessageRepository
 import com.io.repository.message.MessageRepositoryImpl
 import com.io.repository.user.UserRepository
 import com.io.repository.user.UserRepositoryImpl
+import com.io.service.UserService
 import com.io.util.Constants
 import org.koin.core.scope.get
 import org.koin.dsl.module
@@ -56,6 +57,10 @@ val repositoryModule = module {
     single<MessageRepository> {
         MessageRepositoryImpl(get())
     }
+}
+
+val serviceModule = module {
+    single<UserService> { UserService(get()) }
 }
 
 val dbModule = module {
