@@ -7,7 +7,7 @@ data class UserRequest(
     val email: String,
     val password: String
 ) {
-    fun inBlank() : Boolean = email.isBlank() || password.isBlank()
+    fun isBlank() : Boolean = email.isBlank() || password.isBlank()
 }
 
 @Serializable

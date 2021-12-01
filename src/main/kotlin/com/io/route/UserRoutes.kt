@@ -1,27 +1,21 @@
 package com.io.route
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.io.controller.user.UserController
 import com.io.data.mapper.toLoginResponse
-import com.io.data.mapper.toModel
 import com.io.data.mapper.toResponse
 import com.io.data.model.login.LoginResponse
 import com.io.data.model.user.UserIdRequest
 import com.io.data.model.user.UserRequest
 import com.io.data.model.user.UserResponse
-import com.io.plugins.email
 import com.io.service.UserService
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.auth.jwt.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
-import java.util.*
 
 
 fun Route.userRoutes(
@@ -40,16 +34,19 @@ fun Route.userRoutes(
 
         val response = userController.createUser(request)
         if (response.first != null){
-            val timeSkip = 1000 * 60 * 5
+            val accessToken = getAccessToken(
+                email = response.first!!.email,
+                jwtIssuer = jwtIssuer,
+                jwtAudience = jwtAudience,
+                jwtSecret = jwtSecret
+            )
 
-            val token = JWT.create()
-                .withClaim("email", response.first?.email)
-                .withIssuer(jwtIssuer)
-                .withExpiresAt(Date(System.currentTimeMillis() + timeSkip))
-                .withAudience(jwtAudience)
-                .sign(Algorithm.HMAC256(jwtSecret))
+            val refreshToken = userController.createRefreshToken(
+                userId = response.first!!.id,
+                email = response.first!!.email
+            )
 
-            call.response<LoginResponse>(response.first?.toLoginResponse(token), response.second)
+            call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
         } else call.response<LoginResponse>(null, response.second)
     }
 

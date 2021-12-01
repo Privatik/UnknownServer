@@ -8,10 +8,7 @@ import com.io.data.model.login.LoginIdRequest
 import com.io.data.model.login.LoginRequest
 import com.io.data.model.login.LoginResponse
 import com.io.service.UserService
-import com.io.util.LoginApiConstant
-import com.io.util.ifEmailBelongsToUser
-import com.io.util.response
-import com.io.util.responseBoolean
+import com.io.util.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -38,14 +35,19 @@ fun Route.loginRoutes(
         val response = loginController.login(request)
 
         if (response.first != null){
-            val token = JWT.create()
-                .withClaim("email", request.email)
-                .withIssuer(jwtIssuer)
-                .withExpiresAt(Date(System.currentTimeMillis() + 60000))
-                .withAudience(jwtAudience)
-                .sign(Algorithm.HMAC256(jwtSecret))
+            val accessToken = getAccessToken(
+                email = response.first!!.email,
+                jwtIssuer = jwtIssuer,
+                jwtAudience = jwtAudience,
+                jwtSecret = jwtSecret
+            )
 
-            call.response<LoginResponse>(response.first?.toLoginResponse(token), response.second)
+            val refreshToken = loginController.createRefreshToken(
+                userId = response.first!!.id,
+                email = response.first!!.email
+            )
+
+            call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
         } else call.response<LoginResponse>(null, response.second)
 
     }

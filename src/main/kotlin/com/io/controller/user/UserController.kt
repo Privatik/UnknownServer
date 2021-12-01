@@ -11,4 +11,6 @@ interface UserController {
     suspend fun createUser(user: UserRequest): Pair<User?, ExceptionMessage?>
 
     suspend fun getUserById(user: UserIdRequest): Pair<User?, ExceptionMessage?>
+
+    suspend fun createRefreshToken(userId: String, email: String): String
 }

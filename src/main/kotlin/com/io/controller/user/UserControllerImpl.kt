@@ -3,16 +3,19 @@ package com.io.controller.user
 import com.io.data.mapper.toModel
 import com.io.data.model.user.UserIdRequest
 import com.io.data.model.user.UserRequest
+import com.io.model.RefreshToken
 import com.io.model.User
+import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.user.UserRepository
 import com.io.util.ExceptionMessage
 
 class UserControllerImpl(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val refreshTokenRepository: RefreshTokenRepository
 ): UserController {
 
     override suspend fun createUser(user: UserRequest): Pair<User?, ExceptionMessage?> {
-        if(user.inBlank()) {
+        if(user.isBlank()) {
             return Pair(null, ExceptionMessage.EXCEPTION_USER_FIELD_EMPTY)
         }
 
@@ -31,4 +34,7 @@ class UserControllerImpl(
 
         return Pair(userFind, null)
     }
+
+    override suspend fun createRefreshToken(userId: String, email: String): String =
+        refreshTokenRepository.getRefreshToken(userId, email).refreshToken
 }

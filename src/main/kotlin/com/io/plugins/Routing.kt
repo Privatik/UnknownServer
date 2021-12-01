@@ -1,9 +1,6 @@
 package com.io.plugins
 
-import com.io.route.chatRoutes
-import com.io.route.loginRoutes
-import com.io.route.messageRoutes
-import com.io.route.userRoutes
+import com.io.route.*
 import com.io.util.BASE_API
 import io.ktor.routing.*
 import io.ktor.http.*
@@ -29,6 +26,12 @@ fun Application.configureRouting() {
             )
 
             userRoutes(
+                jwtAudience = jwtAudience,
+                jwtSecret = jwtSecret,
+                jwtIssuer = jwtIssuer
+            )
+
+            refreshTokenRoutes(
                 jwtAudience = jwtAudience,
                 jwtSecret = jwtSecret,
                 jwtIssuer = jwtIssuer

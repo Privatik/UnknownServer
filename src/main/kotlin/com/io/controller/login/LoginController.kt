@@ -11,4 +11,6 @@ interface LoginController {
     suspend fun login(login: LoginRequest): Pair<User?, ExceptionMessage?>
 
     suspend fun logout(logout: LoginIdRequest): Pair<Boolean , ExceptionMessage?>
+
+    suspend fun createRefreshToken(userId: String, email: String): String
 }

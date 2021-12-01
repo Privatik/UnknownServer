@@ -30,3 +30,8 @@ object MessageApiConstant{
     const val MESSAGE_UPDATE = "/message/update"
     const val MESSAGE_DELETE = "/message/delete"
 }
+
+object RefreshApiConstant{
+
+    const val REFRESH_TOKEN = "/refresh_token"
+}
