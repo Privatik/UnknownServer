@@ -8,8 +8,8 @@ import com.io.util.ExceptionMessage
 
 interface MessageController {
 
-    suspend fun sendMessage(message: MessageRequest): Pair<Message?, ExceptionMessage?>
-    suspend fun updateMessage(message: MessageRequest): Pair<Message?, ExceptionMessage?>
-    suspend fun deleteMessage(message: MessageRequest): Pair<Boolean, ExceptionMessage?>
-    suspend fun getMessages(messagePaging: MessagesPagingRequest): Pair<List<Message>?, ExceptionMessage?>
+    suspend fun sendMessage(userId: String, message: MessageRequest): Pair<Message?, ExceptionMessage?>
+    suspend fun updateMessage(userId: String, message: MessageRequest): Pair<Message?, ExceptionMessage?>
+    suspend fun deleteMessage(userId: String, message: MessageRequest): Pair<Boolean, ExceptionMessage?>
+    suspend fun getMessages(userId: String, messagePaging: MessagesPagingRequest): Pair<List<Message>?, ExceptionMessage?>
 }

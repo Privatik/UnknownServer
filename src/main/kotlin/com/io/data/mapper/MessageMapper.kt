@@ -8,10 +8,10 @@ import com.io.model.Message
 import com.io.model.MessageType
 import org.bson.types.ObjectId
 
-fun MessageRequest.toModel(): Message =
+fun MessageRequest.toModel(userId: String): Message =
     Message(
         id = this.id ?: ObjectId().toString(),
-        userId = this.userId,
+        userId = userId,
         chatId = this.chatId,
         text = this.text,
         type = this.type.toModel(),

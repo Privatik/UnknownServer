@@ -37,7 +37,7 @@ fun Route.refreshTokenRoutes(
 
             if (response.first != null){
                 val accessToken = getAccessToken(
-                    email = response.first!!.email,
+                    userId = response.first!!.userId,
                     jwtSecret = jwtSecret,
                     jwtAudience = jwtAudience,
                     jwtIssuer = jwtIssuer

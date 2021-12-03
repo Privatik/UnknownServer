@@ -1,13 +1,11 @@
 package com.io.controller.login
 
-import com.io.data.model.login.LoginIdRequest
 import com.io.data.model.login.LoginRequest
 import com.io.model.User
 import com.io.repository.login.LoginRepository
 import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.user.UserRepository
 import com.io.util.ExceptionMessage
-import kotlin.math.log
 
 class LoginControllerImpl(
     private val loginRepository: LoginRepository,
@@ -31,8 +29,8 @@ class LoginControllerImpl(
         }
     }
 
-    override suspend fun logout(logout: LoginIdRequest): Pair<Boolean, ExceptionMessage?> {
-        val user = loginRepository.logout(logout.id) ?: kotlin.run {
+    override suspend fun logout(userId: String): Pair<Boolean, ExceptionMessage?> {
+        val user = loginRepository.logout(userId) ?: kotlin.run {
             return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
@@ -40,6 +38,6 @@ class LoginControllerImpl(
         return Pair(true, null)
     }
 
-    override suspend fun createRefreshToken(userId: String, email: String): String =
-        refreshTokenRepository.getRefreshToken(userId, email).refreshToken
+    override suspend fun createRefreshToken(userId: String): String =
+        refreshTokenRepository.getRefreshToken(userId).refreshToken
 }

@@ -9,8 +9,3 @@ data class UserRequest(
 ) {
     fun isBlank() : Boolean = email.isBlank() || password.isBlank()
 }
-
-@Serializable
-data class UserIdRequest(
-    val id: String
-)

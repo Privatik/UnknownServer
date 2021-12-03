@@ -20,9 +20,7 @@ import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.refresh_token.RefreshTokenRepositoryImpl
 import com.io.repository.user.UserRepository
 import com.io.repository.user.UserRepositoryImpl
-import com.io.service.UserService
 import com.io.util.Constants
-import org.koin.core.scope.get
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
@@ -72,7 +70,6 @@ val repositoryModule = module {
 }
 
 val serviceModule = module {
-    single<UserService> { UserService(get()) }
 }
 
 val dbModule = module {

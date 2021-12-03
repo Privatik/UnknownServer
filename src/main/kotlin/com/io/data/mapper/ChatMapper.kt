@@ -6,10 +6,10 @@ import com.io.data.model.user.UserRequest
 import com.io.model.Chat
 import com.io.model.User
 
-fun ChatRequest.toModel(): Chat =
+fun ChatRequest.toModel(userId:String): Chat =
     Chat(
-        firstCompanionId = this.firstCompanionId,
-        secondCompanionId = this.secondCompanionId
+        firstCompanionId = userId,
+        secondCompanionId = this.companionId
     )
 
 fun Chat.toResponse(): ChatResponse =

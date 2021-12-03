@@ -21,7 +21,7 @@ class RefreshTokenRepositoryImpl(
         return System.currentTimeMillis() < token.timestamp
     }
 
-    override suspend fun getRefreshToken(userId: String): RefreshToken? {
+    override suspend fun getRefreshToken(userId: String): RefreshToken {
         val token = tokens.findOne(RefreshToken::userId eq userId) ?: kotlin.run {
             return createNewRefreshToken(userId)
         }
@@ -34,44 +34,13 @@ class RefreshTokenRepositoryImpl(
         }
     }
 
-    override suspend fun getRefreshToken(userId: String, email: String): RefreshToken {
-        val token = tokens.findOne(RefreshToken::userId eq userId, RefreshToken::email eq email) ?: kotlin.run {
-            return createNewRefreshToken(userId, email)
-        }
 
-        return if (checkValidRefreshToken(userId, token.refreshToken)){
-            token
-        } else {
-            deleteTokens(userId)
-            createNewRefreshToken(userId, email)
-        }
-    }
-
-    private suspend fun createNewRefreshToken(userId: String, email: String): RefreshToken {
+    private suspend fun createNewRefreshToken(userId: String): RefreshToken {
         val token = UUID.randomUUID().toString()
 
         val model =
             RefreshToken(
                 userId = userId,
-                email = email,
-                refreshToken = token,
-                timestamp = System.currentTimeMillis() + REFRESH_TOKEN_LIFE_CYCLE
-            )
-        tokens.insertOne(
-           model
-        )
-
-        return model
-    }
-
-    private suspend fun createNewRefreshToken(userId: String): RefreshToken? {
-        val token = UUID.randomUUID().toString()
-        val oldToken = tokens.findOne(RefreshToken::userId eq userId) ?: return null
-
-        val model =
-            RefreshToken(
-                userId = userId,
-                email = oldToken.email,
                 refreshToken = token,
                 timestamp = System.currentTimeMillis() + REFRESH_TOKEN_LIFE_CYCLE
             )

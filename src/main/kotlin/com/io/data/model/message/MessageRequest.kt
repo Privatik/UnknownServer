@@ -6,7 +6,6 @@ import org.bson.types.ObjectId
 
 @Serializable
 data class MessagesPagingRequest(
-    val userId: String,
     val chatId: String,
     val page: Int,
     val pageSize: Int
@@ -15,7 +14,6 @@ data class MessagesPagingRequest(
 @Serializable
 data class MessageRequest (
     val id: String? = null,
-    val userId: String,
     val chatId: String,
     val text: String,
     val type: MessageTypeRequest,
@@ -24,7 +22,7 @@ data class MessageRequest (
 ) {
 
     fun isBlank(): Boolean =
-        userId.isBlank() || chatId.isBlank() || text.isBlank() || timeSend == 0L
+        chatId.isBlank() || text.isBlank() || timeSend == 0L
 
     fun isBlankWithId(): Boolean = id?.isBlank() == true || isBlank()
 }

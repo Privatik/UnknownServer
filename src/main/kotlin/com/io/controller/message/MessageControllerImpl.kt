@@ -15,29 +15,29 @@ class MessageControllerImpl(
     private val userRepository: UserRepository
 ): MessageController {
 
-    override suspend fun sendMessage(message: MessageRequest): Pair<Message?, ExceptionMessage?> {
+    override suspend fun sendMessage(userId: String, message: MessageRequest): Pair<Message?, ExceptionMessage?> {
         if (message.isBlank()){
             return Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
-        else if (userRepository.getUserById(message.userId) == null){
+        else if (userRepository.getUserById(userId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
-        val messageModel = messageRepository.sendMessage(message.toModel())
+        val messageModel = messageRepository.sendMessage(message.toModel(userId))
 
         return Pair(messageModel, null)
     }
 
-    override suspend fun updateMessage(message: MessageRequest): Pair<Message?, ExceptionMessage?> {
+    override suspend fun updateMessage(userId: String, message: MessageRequest): Pair<Message?, ExceptionMessage?> {
         if (message.isBlankWithId()){
             return Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
-        else if (userRepository.getUserById(message.userId) == null){
+        else if (userRepository.getUserById(userId) == null){
             return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
         else if (message.timeUpdate == null){
@@ -56,14 +56,14 @@ class MessageControllerImpl(
         return Pair(messageModel, null)
     }
 
-    override suspend fun deleteMessage(message: MessageRequest): Pair<Boolean, ExceptionMessage?> {
+    override suspend fun deleteMessage(userId: String, message: MessageRequest): Pair<Boolean, ExceptionMessage?> {
         if (message.isBlankWithId()){
             return Pair(false, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
         else if (chatRepository.getChat(message.chatId) == null){
             return Pair(false, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
         }
-        else if (userRepository.getUserById(message.userId) == null){
+        else if (userRepository.getUserById(userId) == null){
             return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
@@ -72,9 +72,14 @@ class MessageControllerImpl(
         return Pair(isDelete, if (isDelete) null else ExceptionMessage.EXCEPTION_MESSAGE_DONT_EXIST)
     }
 
-    override suspend fun getMessages(messagePaging: MessagesPagingRequest): Pair<List<Message>?, ExceptionMessage?> {
+    override suspend fun getMessages(
+        userId: String,
+        messagePaging: MessagesPagingRequest
+    ): Pair<List<Message>?, ExceptionMessage?> {
         return if (chatRepository.getChat(messagePaging.chatId) == null){
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
+        } else if (userRepository.getUserById(userId) == null) {
+            Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         } else {
             if (messagePaging.page < 0 || messagePaging.pageSize < 1){
                 Pair(null, ExceptionMessage.EXCEPTION_MESSAGE_DONT_CORRECT_DATA)

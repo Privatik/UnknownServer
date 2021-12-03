@@ -2,12 +2,9 @@ package com.io.route
 
 import com.io.controller.message.MessageController
 import com.io.data.mapper.toResponse
-import com.io.data.model.chat.ChatResponse
 import com.io.data.model.message.MessageRequest
 import com.io.data.model.message.MessageResponse
 import com.io.data.model.message.MessagesPagingRequest
-import com.io.model.Message
-import com.io.service.UserService
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.http.*
@@ -18,7 +15,6 @@ import org.koin.ktor.ext.inject
 
 fun Route.messageRoutes() {
     val messageController: MessageController by inject()
-    val userService: UserService by inject()
 
     post(MessageApiConstant.MESSAGE_SEND) {
         val request = call.receiveOrNull<MessageRequest>() ?: kotlin.run {
@@ -26,13 +22,8 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        ifEmailBelongsToUser(
-            userId = request.userId,
-            validateEmail = userService::checkUserByEmail
-        ){
-            val response = messageController.sendMessage(request)
-            call.response<MessageResponse>(response.first?.toResponse(), response.second)
-        }
+        val response = messageController.sendMessage(call.userId, request)
+        call.response<MessageResponse>(response.first?.toResponse(), response.second)
     }
 
     post(MessageApiConstant.MESSAGE_UPDATE) {
@@ -41,14 +32,8 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        ifEmailBelongsToUser(
-            userId = request.userId,
-            validateEmail = userService::checkUserByEmail
-        ) {
-            val response = messageController.updateMessage(request)
-
-            call.response<MessageResponse>(response.first?.toResponse(), response.second)
-        }
+        val response = messageController.updateMessage(call.userId, request)
+        call.response<MessageResponse>(response.first?.toResponse(), response.second)
     }
 
     post(MessageApiConstant.MESSAGE_DELETE) {
@@ -57,14 +42,8 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        ifEmailBelongsToUser(
-            userId = request.userId,
-            validateEmail = userService::checkUserByEmail
-        ) {
-            val response = messageController.deleteMessage(request)
-
-            call.responseBoolean(response.first, response.second)
-        }
+        val response = messageController.deleteMessage(call.userId, request)
+        call.responseBoolean(response.first, response.second)
     }
 
     post(MessageApiConstant.MESSAGES_GEt_BY_CHAT_ID) {
@@ -73,13 +52,7 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        ifEmailBelongsToUser(
-            userId = request.userId,
-            validateEmail = userService::checkUserByEmail
-        ) {
-            val response = messageController.getMessages(request)
-
-            call.response<List<MessageResponse>>(response.first?.map { it.toResponse() }, response.second)
-        }
+        val response = messageController.getMessages(call.userId, request)
+        call.response<List<MessageResponse>>(response.first?.map { it.toResponse() }, response.second)
     }
 }

@@ -4,12 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChatRequest(
-    val firstCompanionId: String,
-    val secondCompanionId: String
-) {
-
-    fun isBlank() = firstCompanionId.isBlank() || secondCompanionId.isBlank()
-}
+    val companionId: String
+)
 
 @Serializable
 data class ChatIdRequest(
@@ -18,7 +14,6 @@ data class ChatIdRequest(
 
 @Serializable
 data class ChatsPagingRequest(
-    val userId: String,
     val page: Int,
     val pageSize: Int
 )

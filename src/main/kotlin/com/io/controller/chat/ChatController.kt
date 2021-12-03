@@ -8,9 +8,7 @@ import com.io.util.ExceptionMessage
 
 interface ChatController {
 
-    suspend fun createChat(chat: ChatRequest): Pair<Chat?, ExceptionMessage?>
+    suspend fun createChat(userId: String, chat: ChatRequest): Pair<Chat?, ExceptionMessage?>
 
-    suspend fun getChat(chat: ChatIdRequest): Pair<Chat?, ExceptionMessage?>
-
-    suspend fun getChats(chatPaging: ChatsPagingRequest): Pair<List<Chat>?, ExceptionMessage?>
+    suspend fun getChats(userId: String, chatPaging: ChatsPagingRequest): Pair<List<Chat>?, ExceptionMessage?>
 }

@@ -1,9 +1,7 @@
 package com.io.controller.user
 
 import com.io.data.mapper.toModel
-import com.io.data.model.user.UserIdRequest
 import com.io.data.model.user.UserRequest
-import com.io.model.RefreshToken
 import com.io.model.User
 import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.user.UserRepository
@@ -27,14 +25,14 @@ class UserControllerImpl(
         }
     }
 
-    override suspend fun getUserById(user: UserIdRequest): Pair<User?, ExceptionMessage?> {
-        val userFind = userRepository.getUserById(user.id) ?: kotlin.run {
+    override suspend fun getUserById(userId: String): Pair<User?, ExceptionMessage?> {
+        val userFind = userRepository.getUserById(userId) ?: kotlin.run {
             return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
         return Pair(userFind, null)
     }
 
-    override suspend fun createRefreshToken(userId: String, email: String): String =
-        refreshTokenRepository.getRefreshToken(userId, email).refreshToken
+    override suspend fun createRefreshToken(userId: String): String =
+        refreshTokenRepository.getRefreshToken(userId).refreshToken
 }

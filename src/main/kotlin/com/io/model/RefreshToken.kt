@@ -8,7 +8,6 @@ data class RefreshToken(
     @BsonId
     val id: String = ObjectId().toString(),
     val userId: String,
-    val email: String,
     val refreshToken: String,
     val timestamp: Long
 )

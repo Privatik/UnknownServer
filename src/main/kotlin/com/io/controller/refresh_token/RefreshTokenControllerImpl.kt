@@ -27,7 +27,7 @@ class RefreshTokenControllerImpl(
         } else {
             val response = refreshTokenRepository.getRefreshToken(userId)
 
-            Pair(response, if (response == null) ExceptionMessage.EXCEPTION_REFRESH_TOKEN_DEADLINE_HAS_EXPIRED else null)
+            Pair(response, null)
         }
     }
 }

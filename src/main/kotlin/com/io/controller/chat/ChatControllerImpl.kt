@@ -14,45 +14,37 @@ class ChatControllerImpl(
     private val userRepository: UserRepository
 ): ChatController {
 
-    override suspend fun createChat(chat: ChatRequest): Pair<Chat?, ExceptionMessage?> {
-        return if (chat.isBlank()){
+    override suspend fun createChat(userId: String, chat: ChatRequest): Pair<Chat?, ExceptionMessage?> {
+        return if (chat.companionId.isBlank()){
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_FIELD_EMPTY)
         }
-        else if (userRepository.getUserById(chat.firstCompanionId) == null){
+        else if (userRepository.getUserById(userId) == null){
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_FIRST_USER_DONT_EXIST)
         }
-        else if (userRepository.getUserById(chat.secondCompanionId) == null){
+        else if (userRepository.getUserById(chat.companionId) == null){
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_SECOND_USER_DONT_EXIST)
         }
-        else if (chatRepository.getChat(chat.firstCompanionId, chat.secondCompanionId) != null) {
+        else if (chatRepository.getChat(userId, chat.companionId) != null) {
             Pair(null, ExceptionMessage.EXCEPTION_CHAT_HAS_ALREADY)
         } else {
-            val chatCreate = chatRepository.createChat(chat.toModel())
-            userRepository.addChat(chat.firstCompanionId, chatCreate.id)
-            userRepository.addChat(chat.secondCompanionId, chatCreate.id)
+            val chatCreate = chatRepository.createChat(chat.toModel(userId))
+            userRepository.addChat(userId, chatCreate.id)
+            userRepository.addChat(chat.companionId, chatCreate.id)
             Pair(chatCreate, null)
         }
     }
 
-    override suspend fun getChat(chat: ChatIdRequest): Pair<Chat?, ExceptionMessage?> {
-        if (chat.id.isBlank()) {
-            return  Pair(null, ExceptionMessage.EXCEPTION_CHAT_FIELD_EMPTY)
-        }
-        val chatFind = chatRepository.getChat(chat.id) ?: kotlin.run {
-            return Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_EXIST)
-        }
-
-        return Pair(chatFind, null)
-    }
-
-    override suspend fun getChats(chatPaging: ChatsPagingRequest): Pair<List<Chat>?, ExceptionMessage?> {
-        return if (userRepository.getUserById(chatPaging.userId) == null){
+    override suspend fun getChats(
+        userId: String,
+        chatPaging: ChatsPagingRequest
+    ): Pair<List<Chat>?, ExceptionMessage?> {
+        return if (userRepository.getUserById(userId) == null){
             Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         } else {
             if (chatPaging.page < 0 || chatPaging.pageSize < 1){
                 Pair(null, ExceptionMessage.EXCEPTION_CHAT_DONT_CORRECT_DATA)
             } else {
-                val setChatsId = userRepository.getChatsId(chatPaging.userId) ?: return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+                val setChatsId = userRepository.getChatsId(userId) ?: return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
                 val listChats = chatRepository.getChats(setChatsId, chatPaging.page, chatPaging.pageSize)
                 Pair(listChats, null)
             }

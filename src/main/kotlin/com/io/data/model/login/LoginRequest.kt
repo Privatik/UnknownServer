@@ -10,8 +10,3 @@ data class LoginRequest(
 
     fun inBlank() : Boolean = email.isBlank() || password.isBlank()
 }
-
-@Serializable
-data class LoginIdRequest(
-    val id: String
-)
