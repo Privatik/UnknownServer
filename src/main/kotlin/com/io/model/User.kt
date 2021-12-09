@@ -10,5 +10,28 @@ data class User(
     val email: String,
     val password: String,
     val chatsIds: MutableSet<String> = mutableSetOf(),
-    val isActive: Boolean = false
-)
+    val isActive: Boolean = false,
+    val height: Int? = null,
+    val weight: Int? = null,
+    val locate: String? = null,
+    val sex: Sex,
+    val birthDay: Long
+){
+    @Serializable
+    enum class Sex{
+        UNKNOWN,
+        MAN,
+        WOMAN
+    }
+
+    companion object{
+
+        fun parseToSex(sexN: Int):Sex =
+            when (sexN){
+                0 -> Sex.MAN
+                1 -> Sex.WOMAN
+                else -> Sex.UNKNOWN
+            }
+
+    }
+}
