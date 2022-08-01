@@ -9,7 +9,12 @@ data class MessagesPagingRequest(
     val chatId: String,
     val page: Int,
     val pageSize: Int
-)
+) {
+
+    fun isIncorrect(): Boolean{
+        return chatId.isBlank() || page == -1 || pageSize == -1
+    }
+}
 
 @Serializable
 data class MessageRequest (

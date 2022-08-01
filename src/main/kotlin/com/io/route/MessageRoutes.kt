@@ -46,10 +46,16 @@ fun Route.messageRoutes() {
         call.responseBoolean(response.first, response.second)
     }
 
-    post(MessageApiConstant.MESSAGES_GEt_BY_CHAT_ID) {
-        val request = call.receiveOrNull<MessagesPagingRequest>() ?: kotlin.run {
+    get(MessageApiConstant.MESSAGES_GEt_BY_CHAT_ID) {
+        val request = MessagesPagingRequest(
+            chatId = call.request.queryParameters["chatId"] ?: "",
+            page = call.request.queryParameters["page"]?.toInt() ?: -1,
+            pageSize = call.request.queryParameters["chatId"]?.toInt() ?: -1
+        )
+
+        if (request.isIncorrect()) {
             call.respond(HttpStatusCode.BadRequest)
-            return@post
+            return@get
         }
 
         val response = messageController.getMessages(call.userId, request)

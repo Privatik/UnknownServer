@@ -50,7 +50,7 @@ fun Route.userRoutes(
     }
 
     authenticate {
-        post(UserApiConstant.USER_GET_BY_ID) {
+        get(UserApiConstant.USER_GET_BY_ID) {
             val response = userController.getUserById(call.userId)
             call.response<UserResponse>(response.first?.toResponse(), response.second)
         }

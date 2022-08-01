@@ -2,6 +2,7 @@ package com.io.plugins
 
 import com.io.route.*
 import com.io.util.BASE_API
+import com.io.websocket.messageSocket
 import io.ktor.routing.*
 import io.ktor.http.*
 import io.ktor.content.*
@@ -38,7 +39,7 @@ fun Application.configureRouting() {
             )
 
             authenticate {
-                chatRoutes()
+//                chatRoutes()
                 messageRoutes()
             }
         }

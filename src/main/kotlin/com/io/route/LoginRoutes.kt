@@ -46,7 +46,7 @@ fun Route.loginRoutes(
     }
 
     authenticate {
-        post(LoginApiConstant.LOGOUT) {
+        get(LoginApiConstant.LOGOUT) {
             val response = loginController.logout(call.userId)
             call.responseBoolean(response.first, response.second)
         }
