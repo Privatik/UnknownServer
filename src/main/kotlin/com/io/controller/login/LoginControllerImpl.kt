@@ -22,7 +22,6 @@ class LoginControllerImpl(
         }
 
         return if (loginRepository.isCorrectPassword(user, login.password)){
-            userRepository.changeActive(user.id, true)
             Pair(user, null)
         } else {
             Pair(null, ExceptionMessage.EXCEPTION_LOGIN_DONT_CORRECT_PASSWORD)
@@ -30,11 +29,10 @@ class LoginControllerImpl(
     }
 
     override suspend fun logout(userId: String): Pair<Boolean, ExceptionMessage?> {
-        val user = loginRepository.logout(userId) ?: kotlin.run {
+        loginRepository.logout(userId) ?: kotlin.run {
             return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
-        userRepository.changeActive(user.id, false)
         return Pair(true, null)
     }
 

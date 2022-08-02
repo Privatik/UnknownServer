@@ -31,6 +31,11 @@ object MessageApiConstant{
     const val MESSAGE_DELETE = "/message/delete"
 }
 
+object PhotoApiConstant{
+
+    const val GET_PHOTO_BY_NAME = "/photo"
+}
+
 object RefreshApiConstant{
 
     const val REFRESH_TOKEN = "/refresh_token"

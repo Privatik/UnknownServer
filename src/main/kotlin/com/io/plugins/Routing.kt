@@ -40,6 +40,7 @@ fun Application.configureRouting() {
 
             authenticate {
 //                chatRoutes()
+                photoRoutes()
                 messageRoutes()
             }
         }

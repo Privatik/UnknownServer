@@ -7,17 +7,17 @@ import com.io.data.model.login.LoginResponse
 import com.io.data.model.user.UserRequest
 import com.io.data.model.user.UserResponse
 import com.io.model.TestConnect
-import com.io.util.UserApiConstant
-import com.io.util.getAccessToken
-import com.io.util.response
-import com.io.util.userId
+import com.io.util.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
+import java.io.File
+import java.util.UUID
 
 fun Route.userRoutes(
     jwtIssuer: String,
@@ -27,9 +27,25 @@ fun Route.userRoutes(
     val userController: UserController by inject()
 
     post(UserApiConstant.USER_CREATE) {
-        val request = call.receiveOrNull<UserRequest>() ?: kotlin.run {
-            call.respond(HttpStatusCode.BadRequest)
-            return@post
+        val userMultiPartData = call.receiveMultipart()
+
+        var request = UserRequest.empty()
+
+        userMultiPartData.forEachPart { part ->
+            when (part){
+                is PartData.FormItem -> {
+                    request = request.updateBody(part)
+                }
+                is PartData.FileItem -> {
+                    val avatarUrl = savePhoto(
+                        fileName = UUID.randomUUID().toString(),
+                        stream = part.streamProvider()
+                    )
+                    request = request.copy(avatar = avatarUrl)
+                    part.dispose()
+                }
+                is PartData.BinaryItem -> {}
+            }
         }
 
         val response = userController.createUser(request)

@@ -6,23 +6,17 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import java.util.Collections
 
-fun Routing.messageSocket(){
-    val connections = Collections.synchronizedSet(HashSet<DefaultWebSocketServerSession>())
+fun Route.messageSocket(){
+    val sessions = WebSocketSessions()
     webSocket("/message") {
-        val thisSocket = this
-        connections += thisSocket
+        sessions.add(this)
         for (frame in incoming) {
             when (frame) {
                 is Frame.Text -> {
                     try {
                         val text = frame.readText()
-                        println("onMessage")
-                        connections.forEach {
-                            it.send(Frame.Text(text))
-                        }
-                    } finally {
-                        connections -= thisSocket
-                    }
+                        sessions.sendAll(Frame.Text(text))
+                    } finally {}
                 }
                 is Frame.Binary -> {
                     try {
@@ -31,9 +25,7 @@ fun Routing.messageSocket(){
 //                        connections.forEach {
 //                            it.send(Frame.Text(text))
 //                        }
-                    } finally {
-                        connections -= thisSocket
-                    }
+                    } finally {}
                 }
                 is Frame.Close,
                 is Frame.Ping,

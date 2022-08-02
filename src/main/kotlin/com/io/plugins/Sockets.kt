@@ -5,6 +5,7 @@ import io.ktor.http.cio.websocket.*
 import io.ktor.websocket.*
 import java.time.*
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.routing.*
@@ -18,6 +19,8 @@ fun Application.configureSockets() {
     }
 
     routing {
-        messageSocket()
+        authenticate {
+            messageSocket()
+        }
     }
 }

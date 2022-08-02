@@ -23,20 +23,4 @@ class UserRepositoryImpl(
     }
 
     override suspend fun getUserById(id: String): User? = users.findOneById(id)
-
-    override suspend fun changeActive(id: String, isActive: Boolean) {
-        users.updateOneById(id = id, update = setValue(User::isActive, isActive))
-    }
-
-    override suspend fun getChatsId(userId: String): Set<String>? {
-        val user = users.findOneById(userId) ?: return null
-        return user.chatsIds
-    }
-
-    override suspend fun addChat(userId: String, chatId: String): Boolean {
-        val user = users.findOneById(userId) ?: return false
-        user.chatsIds.add(chatId)
-        users.updateOneById(id = userId, update = user)
-        return true
-    }
 }
