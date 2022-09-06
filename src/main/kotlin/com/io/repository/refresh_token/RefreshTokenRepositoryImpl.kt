@@ -6,6 +6,7 @@ import com.io.util.Constants.REFRESH_TOKEN_LIFE_CYCLE
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.insertOne
 import org.litote.kmongo.eq
+import java.security.SecureRandom
 import java.util.*
 
 class RefreshTokenRepositoryImpl(
@@ -36,7 +37,7 @@ class RefreshTokenRepositoryImpl(
 
 
     private suspend fun createNewRefreshToken(userId: String): RefreshToken {
-        val token = UUID.randomUUID().toString()
+        val token = ""
 
         val model =
             RefreshToken(

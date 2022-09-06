@@ -71,8 +71,4 @@ fun Route.userRoutes(
             call.response<UserResponse>(response.first?.toResponse(), response.second)
         }
     }
-
-    get("/") {
-        call.respond(HttpStatusCode.OK, TestConnect(text = "Hello World"))
-    }
 }

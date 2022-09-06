@@ -9,8 +9,10 @@ import io.ktor.content.*
 import io.ktor.http.content.*
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.content.TextContent
 import io.ktor.response.*
 import io.ktor.request.*
+import kotlin.random.Random
 
 fun Application.configureRouting() {
 
