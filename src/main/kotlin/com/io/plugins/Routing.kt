@@ -40,6 +40,10 @@ fun Application.configureRouting() {
                 jwtIssuer = jwtIssuer
             )
 
+            get("/"){
+                call.respond(HttpStatusCode.OK,"Hello world")
+            }
+
             authenticate {
 //                chatRoutes()
                 photoRoutes()
