@@ -1,5 +1,6 @@
 package com.io.route
 
+import com.io.util.Constants
 import com.io.util.PhotoApiConstant
 import com.io.util.getPhoto
 import io.ktor.application.*
@@ -12,7 +13,7 @@ fun Route.photoRoutes(){
     get("${PhotoApiConstant.GET_PHOTO_BY_NAME}/{name}"){
         val filename = call.parameters["name"]!!
 
-        val file = getPhoto(filename)
+        val file = getPhoto(Constants.PHOTO_FILE,filename)
         if(file.exists()) {
             call.respondFile(file)
         }

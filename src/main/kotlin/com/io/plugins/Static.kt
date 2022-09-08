@@ -7,8 +7,11 @@ import io.ktor.routing.*
 
 fun Application.configureStatic(){
     routing {
-        static("/${Constants.PHOTO_FILE}") {
+        static("/") {
+            staticBasePackage = "static"
+            static(Constants.PHOTO_FILE){
 
+            }
         }
     }
 }

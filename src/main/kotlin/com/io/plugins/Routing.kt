@@ -44,9 +44,9 @@ fun Application.configureRouting() {
                 call.respond(HttpStatusCode.OK,"Hello world")
             }
 
+            photoRoutes()
             authenticate {
 //                chatRoutes()
-                photoRoutes()
                 messageRoutes()
             }
         }

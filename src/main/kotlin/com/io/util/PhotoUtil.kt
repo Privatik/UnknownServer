@@ -1,24 +1,21 @@
 package com.io.util
 
+import io.ktor.http.content.*
 import java.io.File
 import java.io.InputStream
+import java.util.*
 
-fun getPhoto(fileName: String): File{
-    return File("/${Constants.PHOTO_FILE}/$fileName")
+fun PartData.FileItem.save(path: String, name: String = UUID.randomUUID().toString()): String {
+    val fileBytes = streamProvider().readBytes()
+    val fileExtension = originalFileName?.takeLastWhile { it != '.' }
+    val folderPath = "./src/main/resources/$path"
+    val fileName = "${name}.$fileExtension"
+    val folder = File(folderPath)
+    folder.mkdirs()
+    File("$folderPath/$fileName").writeBytes(fileBytes)
+    return "$path/$fileName"
 }
 
-fun savePhoto(fileName: String, stream: InputStream): String{
-    val imageUrl = "/${Constants.PHOTO_FILE}/$fileName.png"
-    val folder = File("/${Constants.PHOTO_FILE}/")
-    folder.mkdirs()
-    File(imageUrl)
-        .outputStream()
-        .buffered()
-        .use { buffered ->
-            stream.use {
-                it.copyTo(buffered)
-            }
-        }
-
-    return imageUrl
+fun getPhoto(path: String, fileName: String): File{
+    return File("./src/main/resources/$path/$fileName")
 }

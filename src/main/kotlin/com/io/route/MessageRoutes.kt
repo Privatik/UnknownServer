@@ -5,6 +5,7 @@ import com.io.data.mapper.toResponse
 import com.io.data.model.message.MessageRequest
 import com.io.data.model.message.MessageResponse
 import com.io.data.model.message.MessagesPagingRequest
+import com.io.secutiry.token.userId
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.http.*

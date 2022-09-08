@@ -37,10 +37,7 @@ fun Route.userRoutes(
                     request = request.updateBody(part)
                 }
                 is PartData.FileItem -> {
-                    val avatarUrl = savePhoto(
-                        fileName = UUID.randomUUID().toString(),
-                        stream = part.streamProvider()
-                    )
+                    val avatarUrl = part.save(Constants.PHOTO_FILE)
                     request = request.copy(avatar = avatarUrl)
                     part.dispose()
                 }
@@ -48,21 +45,23 @@ fun Route.userRoutes(
             }
         }
 
+        var accessToken: String = ""
+        var refreshToken: String = ""
+
         val response = userController.createUser(request)
         if (response.first != null){
-            val accessToken = getAccessToken(
+            accessToken = getAccessToken(
                 userId = response.first!!.id,
                 jwtIssuer = jwtIssuer,
                 jwtAudience = jwtAudience,
                 jwtSecret = jwtSecret
             )
 
-            val refreshToken = userController.createRefreshToken(
+            refreshToken = userController.createRefreshToken(
                 userId = response.first!!.id
             )
-
-            call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
-        } else call.response<LoginResponse>(null, response.second)
+        }
+        call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
     }
 
     authenticate {
