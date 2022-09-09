@@ -6,6 +6,7 @@ import com.io.repository.login.LoginRepository
 import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.user.UserRepository
 import com.io.util.ExceptionMessage
+import com.io.util.Response
 
 class LoginControllerImpl(
     private val loginRepository: LoginRepository,
@@ -13,27 +14,27 @@ class LoginControllerImpl(
     private val refreshTokenRepository: RefreshTokenRepository
 ): LoginController {
 
-    override suspend fun login(login: LoginRequest): Pair<User?, ExceptionMessage?> {
+    override suspend fun login(login: LoginRequest): Response<User> {
         if (login.inBlank()){
-            return Pair(null, ExceptionMessage.EXCEPTION_LOGIN_FIELD_EMPTY)
+            return Response(null, ExceptionMessage.EXCEPTION_LOGIN_FIELD_EMPTY)
         }
         val user = loginRepository.login(login.email) ?: kotlin.run {
-            return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
         return if (loginRepository.isCorrectPassword(user, login.password)){
-            Pair(user, null)
+            Response(user, null)
         } else {
-            Pair(null, ExceptionMessage.EXCEPTION_LOGIN_DONT_CORRECT_PASSWORD)
+            Response(null, ExceptionMessage.EXCEPTION_LOGIN_DONT_CORRECT_PASSWORD)
         }
     }
 
-    override suspend fun logout(userId: String): Pair<Boolean, ExceptionMessage?> {
+    override suspend fun logout(userId: String): Response<Boolean> {
         loginRepository.logout(userId) ?: kotlin.run {
-            return Pair(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Response(false, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
-        return Pair(true, null)
+        return Response(true, null)
     }
 
     override suspend fun createRefreshToken(userId: String): String =

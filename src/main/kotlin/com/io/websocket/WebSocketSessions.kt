@@ -4,28 +4,49 @@ import io.ktor.http.cio.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
-class WebSocketSessions {
-    private val connections = Collections.synchronizedSet(HashSet<DefaultWebSocketServerSession>())
+class WebSocketSessions private constructor(){
+    private val expiredAtMap = ConcurrentHashMap<DefaultWebSocketServerSession, Long>()
 
     suspend fun sendAll(frame: Frame){
-        val removeSet = HashSet<DefaultWebSocketServerSession>()
-        connections.forEach {
+        expiredAtMap.forEach { (session, expired) ->
             try {
-                it.send(frame)
+                if (System.currentTimeMillis() < expired){
+                    session.send(frame)
+                } else {
+                    session.close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "You token is expired"))
+                    remove(session)
+                }
             } catch (e: ClosedReceiveChannelException){
-                removeSet += it
+                remove(session)
             }
         }
-        connections -= removeSet
     }
 
-    fun add(session: DefaultWebSocketServerSession){
-        connections += session
+    fun add(session: DefaultWebSocketServerSession, expiredAt: Long){
+        expiredAtMap[session] = expiredAt
     }
 
     fun remove(session: DefaultWebSocketServerSession){
-        connections -= session
+        expiredAtMap.remove(session)
+    }
+
+    companion object {
+        private var webSocketSessions: WebSocketSessions? = null
+        private val lock = Any()
+
+        @JvmStatic
+        fun getInstance(): WebSocketSessions{
+            if (webSocketSessions == null){
+                synchronized(lock){
+                    if (webSocketSessions == null){
+                        webSocketSessions = WebSocketSessions()
+                    }
+                }
+            }
+            return webSocketSessions!!
+        }
     }
 
 }

@@ -17,6 +17,15 @@ data class MessagesPagingRequest(
 }
 
 @Serializable
+data class MessagesById(
+    val id: String
+) {
+    fun isIncorrect(): Boolean{
+        return id.isBlank()
+    }
+}
+
+@Serializable
 data class MessageRequest (
     val id: String? = null,
     val chatId: String,

@@ -4,8 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RefreshTokenRequest(
-    val userId: String,
-    val refresh_token: String,
+    val userId: String
 ) {
-    fun isBlank() : Boolean = userId.isBlank() || refresh_token.isBlank()
+    fun isBlank() : Boolean = userId.isBlank()
 }

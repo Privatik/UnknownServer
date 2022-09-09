@@ -20,6 +20,10 @@ import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.refresh_token.RefreshTokenRepositoryImpl
 import com.io.repository.user.UserRepository
 import com.io.repository.user.UserRepositoryImpl
+import com.io.secutiry.hashing.HashingService
+import com.io.secutiry.hashing.SHA256HashingService
+import com.io.secutiry.token.JwtTokenService
+import com.io.secutiry.token.TokenService
 import com.io.util.Constants
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.coroutine
@@ -65,11 +69,18 @@ val repositoryModule = module {
     }
 
     single<RefreshTokenRepository> {
-        RefreshTokenRepositoryImpl(get())
+        RefreshTokenRepositoryImpl(get(), get())
     }
 }
 
 val serviceModule = module {
+    single<HashingService> {
+        SHA256HashingService()
+    }
+
+    single<TokenService> {
+        JwtTokenService()
+    }
 }
 
 val dbModule = module {

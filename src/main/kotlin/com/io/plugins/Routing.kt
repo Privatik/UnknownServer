@@ -1,7 +1,9 @@
 package com.io.plugins
 
 import com.io.route.*
+import com.io.secutiry.token.TokenConfig
 import com.io.util.BASE_API
+import com.io.util.Constants
 import com.io.websocket.messageSocket
 import io.ktor.routing.*
 import io.ktor.http.*
@@ -14,39 +16,26 @@ import io.ktor.response.*
 import io.ktor.request.*
 import kotlin.random.Random
 
-fun Application.configureRouting() {
+fun Application.configureRouting(
+    accessTokenConfig: TokenConfig,
+    refreshTokenConfig: TokenConfig
+) {
 
     routing {
-        val jwtIssuer = environment.config.property("jwt.domain").getString()
-        val jwtAudience = environment.config.property("jwt.audience").getString()
-        val jwtSecret = environment.config.property("jwt.secret").getString()
 
         route(BASE_API){
-            loginRoutes(
-                jwtAudience = jwtAudience,
-                jwtSecret = jwtSecret,
-                jwtIssuer = jwtIssuer
-            )
+            loginRoutes(accessTokenConfig, refreshTokenConfig)
 
-            userRoutes(
-                jwtAudience = jwtAudience,
-                jwtSecret = jwtSecret,
-                jwtIssuer = jwtIssuer
-            )
+            userRoutes(accessTokenConfig, refreshTokenConfig)
 
-            refreshTokenRoutes(
-                jwtAudience = jwtAudience,
-                jwtSecret = jwtSecret,
-                jwtIssuer = jwtIssuer
-            )
-
-            get("/"){
-                call.respond(HttpStatusCode.OK,"Hello world")
+            authenticate(Constants.REFRESH_TOKEN){
+                refreshTokenRoutes(accessTokenConfig, refreshTokenConfig)
             }
 
-            photoRoutes()
-            authenticate {
-//                chatRoutes()
+
+            authenticate(Constants.ACCESS_TOKEN) {
+                photoRoutes()
+                chatRoutes()
                 messageRoutes()
             }
         }

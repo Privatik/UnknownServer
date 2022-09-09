@@ -7,6 +7,10 @@ import com.io.data.model.login.LoginResponse
 import com.io.data.model.user.UserRequest
 import com.io.data.model.user.UserResponse
 import com.io.model.TestConnect
+import com.io.secutiry.token.TokenClaim
+import com.io.secutiry.token.TokenConfig
+import com.io.secutiry.token.TokenService
+import com.io.secutiry.token.userId
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -20,11 +24,11 @@ import java.io.File
 import java.util.UUID
 
 fun Route.userRoutes(
-    jwtIssuer: String,
-    jwtAudience: String,
-    jwtSecret: String
+    accessTokenConfig: TokenConfig,
+    refreshTokenConfig: TokenConfig
 ) {
     val userController: UserController by inject()
+    val tokenService: TokenService by inject()
 
     post(UserApiConstant.USER_CREATE) {
         val userMultiPartData = call.receiveMultipart()
@@ -45,29 +49,22 @@ fun Route.userRoutes(
             }
         }
 
-        var accessToken: String = ""
-        var refreshToken: String = ""
 
         val response = userController.createUser(request)
-        if (response.first != null){
-            accessToken = getAccessToken(
-                userId = response.first!!.id,
-                jwtIssuer = jwtIssuer,
-                jwtAudience = jwtAudience,
-                jwtSecret = jwtSecret
+        val answer = if (response.data != null){
+            val accessToken = tokenService.generate(
+                config = accessTokenConfig,
+                TokenClaim("userId", response.data.id)
             )
 
-            refreshToken = userController.createRefreshToken(
-                userId = response.first!!.id
+            val refreshToken = tokenService.generate(
+                config = refreshTokenConfig,
+                TokenClaim("userId", response.data.id)
             )
-        }
-        call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
+            response.data.toLoginResponse(accessToken, refreshToken)
+        } else null
+
+        call.response<LoginResponse>(answer, response.exceptionMessage)
     }
 
-    authenticate {
-        get(UserApiConstant.USER_GET_BY_ID) {
-            val response = userController.getUserById(call.userId)
-            call.response<UserResponse>(response.first?.toResponse(), response.second)
-        }
-    }
 }

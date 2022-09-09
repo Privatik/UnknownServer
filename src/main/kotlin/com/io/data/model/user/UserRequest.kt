@@ -20,7 +20,7 @@ data class UserRequest(
         }
     }
 
-    fun isBlank() : Boolean = email.isBlank() || password.isBlank() || nickName.isBlank() || avatar.isBlank()
+    fun isBlank() : Boolean = email.isBlank() || password.isBlank() || nickName.isBlank()
 
     companion object{
 

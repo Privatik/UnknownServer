@@ -7,7 +7,7 @@ import java.sql.Timestamp
 data class RefreshToken(
     @BsonId
     val id: String = ObjectId().toString(),
-    val userId: String,
     val refreshToken: String,
+    val salt: String,
     val timestamp: Long
 )

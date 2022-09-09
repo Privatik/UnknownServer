@@ -1,5 +1,6 @@
 package com.io.plugins
 
+import com.io.util.Constants
 import com.io.websocket.messageSocket
 import io.ktor.http.cio.websocket.*
 import io.ktor.websocket.*
@@ -19,7 +20,7 @@ fun Application.configureSockets() {
     }
 
     routing {
-        authenticate {
+        authenticate(Constants.ACCESS_TOKEN) {
             messageSocket()
         }
     }

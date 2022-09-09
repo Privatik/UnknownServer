@@ -5,6 +5,7 @@ import com.io.data.mapper.toResponse
 import com.io.data.model.chat.ChatRequest
 import com.io.data.model.chat.ChatResponse
 import com.io.data.model.chat.ChatsPagingRequest
+import com.io.secutiry.token.userId
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.http.*

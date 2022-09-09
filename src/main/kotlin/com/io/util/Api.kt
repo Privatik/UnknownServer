@@ -10,6 +10,11 @@ object UserApiConstant{
     const val USER_GET_BY_ID =  "/user"
 }
 
+object SingleChatApiConstant{
+
+    const val MESSAGE =  "/message"
+}
+
 object LoginApiConstant{
 
     const val LOGIN =  "/login"
@@ -26,6 +31,7 @@ object ChatApiConstant{
 object MessageApiConstant{
 
     const val MESSAGES_GEt_BY_CHAT_ID = "/messages"
+    const val MESSAGES_GEt_BY_ID = "/messages"
     const val MESSAGE_SEND = "/message/send"
     const val MESSAGE_UPDATE = "/message/update"
     const val MESSAGE_DELETE = "/message/delete"

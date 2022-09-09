@@ -6,31 +6,31 @@ import com.io.model.User
 import com.io.repository.refresh_token.RefreshTokenRepository
 import com.io.repository.user.UserRepository
 import com.io.util.ExceptionMessage
+import com.io.util.Response
 
 class UserControllerImpl(
     private val userRepository: UserRepository,
     private val refreshTokenRepository: RefreshTokenRepository
 ): UserController {
 
-    override suspend fun createUser(user: UserRequest): Pair<User?, ExceptionMessage?> {
+    override suspend fun createUser(user: UserRequest): Response<User> {
         if(user.isBlank()) {
-            return Pair(null, ExceptionMessage.EXCEPTION_USER_FIELD_EMPTY)
+            return Response(null, ExceptionMessage.EXCEPTION_USER_FIELD_EMPTY)
         }
 
         val userCreate = userRepository.createUser(user.toModel())
         return if (userCreate != null){
-            Pair(userCreate, null)
+            Response(userCreate, null)
         } else {
-            Pair(null, ExceptionMessage.EXCEPTION_USER_HAS_ALREADY)
+            Response(null, ExceptionMessage.EXCEPTION_USER_HAS_ALREADY)
         }
     }
 
-    override suspend fun getUserById(userId: String): Pair<User?, ExceptionMessage?> {
+    override suspend fun getUserById(userId: String): Response<User> {
         val userFind = userRepository.getUserById(userId) ?: kotlin.run {
-            return Pair(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
+            return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
-
-        return Pair(userFind, null)
+        return Response(userFind, null)
     }
 
     override suspend fun createRefreshToken(userId: String): String =

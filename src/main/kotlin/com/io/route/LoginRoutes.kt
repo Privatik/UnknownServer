@@ -4,6 +4,10 @@ import com.io.controller.login.LoginController
 import com.io.data.mapper.toLoginResponse
 import com.io.data.model.login.LoginRequest
 import com.io.data.model.login.LoginResponse
+import com.io.secutiry.token.TokenClaim
+import com.io.secutiry.token.TokenConfig
+import com.io.secutiry.token.TokenService
+import com.io.secutiry.token.userId
 import com.io.util.*
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -14,11 +18,11 @@ import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
 fun Route.loginRoutes(
-    jwtIssuer: String,
-    jwtAudience: String,
-    jwtSecret: String
+    accessTokenConfig: TokenConfig,
+    refreshTokenConfig: TokenConfig
 ) {
     val loginController: LoginController by inject()
+    val tokenService: TokenService by inject()
 
     post(LoginApiConstant.LOGIN) {
         val request = call.receiveOrNull<LoginRequest>() ?: kotlin.run {
@@ -28,27 +32,28 @@ fun Route.loginRoutes(
 
         val response = loginController.login(request)
 
-        if (response.first != null){
-            val accessToken = getAccessToken(
-                userId = response.first!!.id,
-                jwtIssuer = jwtIssuer,
-                jwtAudience = jwtAudience,
-                jwtSecret = jwtSecret
-            )
+        if (response.isSuccess()){
+            val accessToken = tokenService
+                .generate(
+                    accessTokenConfig,
+                    TokenClaim("userId", response.data!!.id)
+                )
 
-            val refreshToken = loginController.createRefreshToken(
-                userId = response.first!!.id
-            )
+            val refreshToken = tokenService
+                .generate(
+                    refreshTokenConfig,
+                    TokenClaim("userId", response.data.id)
+                )
 
-            call.response<LoginResponse>(response.first?.toLoginResponse(accessToken, refreshToken), response.second)
-        } else call.response<LoginResponse>(null, response.second)
+            call.response<LoginResponse>(response.data.toLoginResponse(accessToken, refreshToken), response.exceptionMessage)
+        } else call.response<LoginResponse>(null, response.exceptionMessage)
 
     }
 
-    authenticate {
+    authenticate(Constants.ACCESS_TOKEN) {
         get(LoginApiConstant.LOGOUT) {
             val response = loginController.logout(call.userId)
-            call.responseBoolean(response.first, response.second)
+            call.responseBoolean(response.data!!, response.exceptionMessage)
         }
     }
 }

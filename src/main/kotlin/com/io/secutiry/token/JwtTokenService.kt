@@ -23,3 +23,6 @@ class JwtTokenService: TokenService {
 
 val ApplicationCall.userId: String
     get() = principal<JWTPrincipal>()?.getClaim("userId", String::class) ?: ""
+
+val ApplicationCall.timeExpireToken: Long
+    get() = (principal<JWTPrincipal>()?.expiresAt?.time ?: 0) / 1000

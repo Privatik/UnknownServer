@@ -36,4 +36,8 @@ class MessageRepositoryImpl(
             .skip(pageSize * page)
             .limit(pageSize)
             .toList()
+
+    override suspend fun getMessage(id: String): Message? {
+        return messages.findOne(id)
+    }
 }
