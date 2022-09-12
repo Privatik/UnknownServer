@@ -32,6 +32,11 @@ fun Route.refreshTokenRoutes(
             return@post
         }
 
+        if (request.userId != call.userId){
+            call.respond(HttpStatusCode.Conflict)
+            return@post
+        }
+
         val accessToken = tokenService.generate(
             accessTokenConfig,
             TokenClaim("userId", request.userId)

@@ -12,7 +12,6 @@ fun MessageRequest.toModel(userId: String): Message =
     Message(
         id = this.id ?: ObjectId().toString(),
         userId = userId,
-        chatId = this.chatId,
         text = this.text,
         type = this.type.toModel(),
         timeSend = this.timeSend,
@@ -27,7 +26,6 @@ fun Message.toResponse(): MessageResponse =
         timeSend = this.timeSend,
         timeUpdate = this.timeUpdate,
         userId = this.userId,
-        chatId = this.chatId
     )
 
 fun MessageType.toResponse(): MessageTypeResponse =

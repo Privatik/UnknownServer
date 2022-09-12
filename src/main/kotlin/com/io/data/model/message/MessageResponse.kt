@@ -8,7 +8,6 @@ import org.bson.types.ObjectId
 data class MessageResponse(
     val id: String,
     val userId: String,
-    val chatId: String,
     val text: String,
     val type: MessageTypeResponse,
     val timeSend: Long,

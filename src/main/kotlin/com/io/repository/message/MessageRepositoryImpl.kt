@@ -29,9 +29,9 @@ class MessageRepositoryImpl(
         return messages.deleteOneById(id).wasAcknowledged()
     }
 
-    override suspend fun getMessages(chatId: String, page: Int, pageSize: Int): List<Message> =
+    override suspend fun getMessages(page: Int, pageSize: Int): List<Message> =
         messages
-            .find(Message::chatId eq chatId)
+            .find()
             .descendingSort(Message::timeSend)
             .skip(pageSize * page)
             .limit(pageSize)

@@ -76,7 +76,6 @@ class MessageControllerImpl(
                 Response(null, ExceptionMessage.EXCEPTION_MESSAGE_DONT_CORRECT_DATA)
             } else {
                 val list = messageRepository.getMessages(
-                    messagePaging.chatId,
                     messagePaging.page,
                     messagePaging.pageSize
                 )

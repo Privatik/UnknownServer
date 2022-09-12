@@ -10,7 +10,7 @@ interface MessageRepository {
 
     suspend fun deleteMessage(id: String): Boolean
 
-    suspend fun getMessages(chatId: String, page: Int, pageSize: Int): List<Message>
+    suspend fun getMessages(page: Int, pageSize: Int): List<Message>
 
     suspend fun getMessage(id: String): Message?
 }

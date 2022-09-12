@@ -29,7 +29,7 @@ fun Route.messageRoutes() {
         }
 
         val response = messageController.sendMessage(call.userId, request)
-        session.sendAll(Frame.Text("NewMessage"))
+        session.sendAll(Frame.Text("NewMessage:${response.data?.id}"))
         call.response<MessageResponse>(response.data?.toResponse(), response.exceptionMessage)
     }
 
@@ -53,12 +53,11 @@ fun Route.messageRoutes() {
         val response = messageController.deleteMessage(call.userId, request)
         session.sendAll(Frame.Text("DeleteMessage:${response.data}"))
         val isThrowException = response.exceptionMessage == null
-        call.response(if (isThrowException) null else response.data!!, response.exceptionMessage)
+        call.response(if (isThrowException) response.data!! else null, response.exceptionMessage)
     }
 
     get(MessageApiConstant.MESSAGES_GEt_BY_CHAT_ID) {
         val request = MessagesPagingRequest(
-            chatId = call.request.queryParameters["chatId"] ?: "",
             page = call.request.queryParameters["page"]?.toInt() ?: -1,
             pageSize = call.request.queryParameters["chatId"]?.toInt() ?: -1
         )

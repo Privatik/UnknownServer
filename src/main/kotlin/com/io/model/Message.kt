@@ -8,7 +8,6 @@ data class Message(
     @BsonId
     val id: String = ObjectId().toString(),
     val userId: String,
-    val chatId: String,
     val text: String,
     val type: MessageType,
     val timeSend: Long,
