@@ -34,6 +34,10 @@ fun Application.configureRouting(
 
 
             authenticate(Constants.ACCESS_TOKEN) {
+                get("/valid"){
+                    call.respond(HttpStatusCode.OK)
+                }
+
                 photoRoutes()
                 chatRoutes()
                 messageRoutes()
