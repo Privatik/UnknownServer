@@ -27,13 +27,14 @@ data class MessagesById(
 @Serializable
 data class MessageRequest (
     val id: String? = null,
+    val userId: String,
     val text: String,
-    val type: MessageTypeRequest,
-    val timeSend: Long,
+    val type: MessageTypeRequest = MessageTypeRequest.TEXT,
+    val timeSend: Long? = null,
     val timeUpdate: Long? = null
 ) {
 
-    fun isBlank(): Boolean = text.isBlank() || timeSend == 0L
+    fun isBlank(): Boolean = text.isBlank() || userId.isBlank()
 
     fun isBlankWithId(): Boolean = id?.isBlank() == true || isBlank()
 }

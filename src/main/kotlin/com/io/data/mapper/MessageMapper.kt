@@ -8,10 +8,11 @@ import com.io.model.Message
 import com.io.model.MessageType
 import org.bson.types.ObjectId
 
-fun MessageRequest.toModel(userId: String): Message =
+fun MessageRequest.toModel(userName: String): Message =
     Message(
         id = this.id ?: ObjectId().toString(),
-        userId = userId,
+        userId = this.userId,
+        userName = userName,
         text = this.text,
         type = this.type.toModel(),
         timeSend = this.timeSend,
@@ -26,6 +27,7 @@ fun Message.toResponse(): MessageResponse =
         timeSend = this.timeSend,
         timeUpdate = this.timeUpdate,
         userId = this.userId,
+        userName = this.userName
     )
 
 fun MessageType.toResponse(): MessageTypeResponse =

@@ -36,14 +36,10 @@ class MessageControllerImpl(
         else if (userRepository.getUserById(userId) == null){
             return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
-        else if (message.timeUpdate == null){
-            return Response(null, ExceptionMessage.EXCEPTION_MESSAGE_DONT_TIMEUPDATE)
-        }
 
         val messageModel = messageRepository.updateMessage(
             message.id.toString(),
             message.text,
-            message.timeUpdate
         )
             ?: kotlin.run {
                 return Response(null, ExceptionMessage.EXCEPTION_MESSAGE_DONT_EXIST)

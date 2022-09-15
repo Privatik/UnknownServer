@@ -6,7 +6,7 @@ interface MessageRepository {
 
     suspend fun sendMessage(message: Message): Message
 
-    suspend fun updateMessage(id: String, text: String, timeUpdate: Long): Message?
+    suspend fun updateMessage(id: String, text: String): Message?
 
     suspend fun deleteMessage(id: String): Boolean
 

@@ -8,7 +8,7 @@ fun UserRequest.toModel(): User =
     User(
         email = this.email,
         password = this.password,
-        nickName = this.nickName,
+        nickName = this.userName,
         avatar = this.avatar
     )
 
@@ -16,6 +16,6 @@ fun User.toResponse(): UserResponse =
     UserResponse(
         id = this.id,
         email = this.email,
-        nickName = this.nickName,
+        userName = this.nickName,
         avatar = this.avatar
     )
