@@ -11,7 +11,7 @@ data class Message(
     val userName: String,
     val text: String,
     val type: MessageType,
-    val timeSend: Long,
+    val timeSend: Long?,
     val timeUpdate: Long? = null
 )
 

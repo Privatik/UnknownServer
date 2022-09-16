@@ -3,6 +3,7 @@ package com.io.websocket
 import com.io.secutiry.token.timeExpireToken
 import com.io.util.SingleChatApiConstant
 import io.ktor.http.cio.websocket.*
+import io.ktor.network.sockets.*
 import io.ktor.routing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -12,6 +13,7 @@ fun Route.messageSocket(){
     val sessions = WebSocketSessions.getInstance()
 
     webSocket(SingleChatApiConstant.MESSAGE) {
+        println("Socket connect")
         sessions.add(this, call.timeExpireToken)
     }
 }

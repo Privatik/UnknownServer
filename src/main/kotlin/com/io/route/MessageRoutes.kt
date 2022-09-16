@@ -59,7 +59,7 @@ fun Route.messageRoutes() {
     get(MessageApiConstant.MESSAGES_GEt_BY_CHAT_ID) {
         val request = MessagesPagingRequest(
             page = call.request.queryParameters["page"]?.toInt() ?: -1,
-            pageSize = call.request.queryParameters["chatId"]?.toInt() ?: -1
+            pageSize = call.request.queryParameters["pageSize"]?.toInt() ?: -1
         )
 
         if (request.isIncorrect()) {
@@ -82,6 +82,6 @@ fun Route.messageRoutes() {
         }
 
         val response = messageController.getMessage(call.userId, request)
-        call.response<Message>(response.data, response.exceptionMessage)
+        call.response<MessageResponse>(response.data?.toResponse(), response.exceptionMessage)
     }
 }
