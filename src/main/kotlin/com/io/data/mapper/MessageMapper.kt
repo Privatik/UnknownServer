@@ -10,7 +10,7 @@ import org.bson.types.ObjectId
 
 fun MessageRequest.toModel(userName: String): Message =
     Message(
-        id = this.id ?: ObjectId().toString(),
+        id = if (this.id == null) ObjectId() else ObjectId(this.id),
         userId = this.userId,
         userName = userName,
         text = this.text,
@@ -21,7 +21,7 @@ fun MessageRequest.toModel(userName: String): Message =
 
 fun Message.toResponse(): MessageResponse =
     MessageResponse(
-        id = this.id,
+        id = this.id.toString(),
         type = this.type.toResponse(),
         text = this.text,
         timeSend = this.timeSend!!,

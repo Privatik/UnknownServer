@@ -6,7 +6,7 @@ import javax.management.monitor.StringMonitor
 
 data class Message(
     @BsonId
-    val id: String = ObjectId().toString(),
+    val id: ObjectId = ObjectId(),
     val userId: String,
     val userName: String,
     val text: String,

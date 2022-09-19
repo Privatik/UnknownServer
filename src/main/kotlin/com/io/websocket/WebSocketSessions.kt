@@ -13,13 +13,17 @@ class WebSocketSessions private constructor(){
     suspend fun sendAll(frame: Frame){
         expiredAtMap.forEach { (session, expired) ->
             try {
-                if (System.currentTimeMillis() < expired){
+                val time = System.currentTimeMillis() / 1000
+                println("Socket try send $time  $expired}")
+                if (time < expired){
                     session.send(frame)
                 } else {
+                    println("Socket close after auth")
                     session.close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "You token is expired"))
                     remove(session)
                 }
             } catch (e: ClosedReceiveChannelException){
+                println("Socket close $e")
                 remove(session)
             }
         }
@@ -34,6 +38,7 @@ class WebSocketSessions private constructor(){
     }
 
     companion object {
+        @Volatile
         private var webSocketSessions: WebSocketSessions? = null
         private val lock = Any()
 

@@ -3,6 +3,7 @@ package com.io.repository.message
 import com.io.model.Chat
 import com.io.model.Message
 import com.io.model.User
+import org.bson.types.ObjectId
 import org.litote.kmongo.`in`
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
@@ -15,8 +16,9 @@ class MessageRepositoryImpl(
     private val messages = db.getCollection<Message>()
 
     override suspend fun sendMessage(message: Message): Message {
-        messages.insertOne(message.copy(timeSend = System.currentTimeMillis()))
-        return message
+        val newMessage = message.copy(timeSend = System.currentTimeMillis())
+        messages.insertOne(newMessage)
+        return newMessage
     }
 
     override suspend fun updateMessage(id: String, text: String): Message? {
@@ -38,6 +40,6 @@ class MessageRepositoryImpl(
             .toList()
 
     override suspend fun getMessage(id: String): Message? {
-        return messages.findOne(id)
+        return messages.findOne(Message::id eq ObjectId(id))
     }
 }
