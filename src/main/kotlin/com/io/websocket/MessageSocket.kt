@@ -14,6 +14,9 @@ fun Route.messageSocket(){
 
     webSocket(SingleChatApiConstant.MESSAGE) {
         println("Socket connect")
+        try {
+            send(Frame.Text("Connect"))
+        } catch (e: Exception){ }
         sessions.add(this, call.timeExpireToken)
         for (frame in incoming){ }
     }

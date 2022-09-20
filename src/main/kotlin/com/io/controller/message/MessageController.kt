@@ -10,9 +10,9 @@ import com.io.util.Response
 
 interface MessageController {
 
-    suspend fun sendMessage(userId: String, message: MessageRequest): Response<Message>
-    suspend fun updateMessage(userId: String, message: MessageRequest): Response<Message>
-    suspend fun deleteMessage(userId: String, message: MessageRequest): Response<String>
+    suspend fun sendMessage(message: MessageRequest): Response<Message>
+    suspend fun updateMessage(message: MessageRequest): Response<Message>
+    suspend fun deleteMessage(message: MessageRequest): Response<String>
     suspend fun getMessages(userId: String, messagePaging: MessagesPagingRequest): Response<List<Message>>
     suspend fun getMessage(userId: String, messageById: MessagesById): Response<Message>
 }

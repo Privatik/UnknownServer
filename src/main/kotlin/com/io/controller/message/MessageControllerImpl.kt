@@ -17,23 +17,23 @@ class MessageControllerImpl(
     private val userRepository: UserRepository
 ): MessageController {
 
-    override suspend fun sendMessage(userId: String, message: MessageRequest): Response<Message> {
+    override suspend fun sendMessage(message: MessageRequest): Response<Message> {
         if (message.isBlank()){
             return Response(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
-        else if (userRepository.getUserById(userId) == null){
+        else if (userRepository.getUserById(message.userId!!) == null){
             return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
-        val messageModel = messageRepository.sendMessage(message.toModel(userId))
+        val messageModel = messageRepository.sendMessage(message.toModel(message.userId))
 
         return Response(messageModel, null)
     }
 
-    override suspend fun updateMessage(userId: String, message: MessageRequest): Response<Message> {
+    override suspend fun updateMessage(message: MessageRequest): Response<Message> {
         if (message.isBlankWithId()){
             return Response(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
-        else if (userRepository.getUserById(userId) == null){
+        else if (userRepository.getUserById(message.userId!!) == null){
             return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 
@@ -48,11 +48,11 @@ class MessageControllerImpl(
         return Response(messageModel, null)
     }
 
-    override suspend fun deleteMessage(userId: String, message: MessageRequest): Response<String> {
+    override suspend fun deleteMessage(message: MessageRequest): Response<String> {
         if (message.isBlankWithId()){
             return Response(null, ExceptionMessage.EXCEPTION_MESSAGE_FIELD_EMPTY)
         }
-        else if (userRepository.getUserById(userId) == null){
+        else if (userRepository.getUserById(message.userId!!) == null){
             return Response(null, ExceptionMessage.EXCEPTION_USER_DONT_EXIST)
         }
 

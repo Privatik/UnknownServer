@@ -28,7 +28,7 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        val response = messageController.sendMessage(call.userId, request)
+        val response = messageController.sendMessage(request.copy(userId = call.userId))
         session.sendAll(Frame.Text("NewMessage:${response.data?.id}"))
         call.response<MessageResponse>(response.data?.toResponse(), response.exceptionMessage)
     }
@@ -39,7 +39,7 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        val response = messageController.updateMessage(call.userId, request)
+        val response = messageController.updateMessage(request.copy(userId = call.userId))
         session.sendAll(Frame.Text("UpdateMessage:${response.data?.id}"))
         call.response<MessageResponse>(response.data?.toResponse(), response.exceptionMessage)
     }
@@ -50,7 +50,7 @@ fun Route.messageRoutes() {
             return@post
         }
 
-        val response = messageController.deleteMessage(call.userId, request)
+        val response = messageController.deleteMessage(request.copy(userId = call.userId))
         session.sendAll(Frame.Text("DeleteMessage:${response.data}"))
         val isThrowException = response.exceptionMessage == null
         call.response(if (isThrowException) response.data!! else null, response.exceptionMessage)

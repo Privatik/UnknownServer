@@ -11,7 +11,7 @@ import org.bson.types.ObjectId
 fun MessageRequest.toModel(userName: String): Message =
     Message(
         id = if (this.id == null) ObjectId() else ObjectId(this.id),
-        userId = this.userId,
+        userId = this.userId!!,
         userName = userName,
         text = this.text,
         type = this.type.toModel(),

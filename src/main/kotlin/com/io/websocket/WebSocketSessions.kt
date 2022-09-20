@@ -11,21 +11,25 @@ class WebSocketSessions private constructor(){
     private val expiredAtMap = ConcurrentHashMap<DefaultWebSocketServerSession, Long>()
 
     suspend fun sendAll(frame: Frame){
+        val removeSessions = mutableListOf<DefaultWebSocketServerSession>()
         expiredAtMap.forEach { (session, expired) ->
             try {
                 val time = System.currentTimeMillis() / 1000
-                println("Socket try send $time  $expired}")
+                println("Socket try send $time $expired}")
                 if (time < expired){
                     session.send(frame)
                 } else {
                     println("Socket close after auth")
                     session.close(CloseReason(CloseReason.Codes.CANNOT_ACCEPT, "You token is expired"))
-                    remove(session)
+                    removeSessions.add(session)
                 }
-            } catch (e: ClosedReceiveChannelException){
+            } catch (e: Exception){
                 println("Socket close $e")
-                remove(session)
+                removeSessions.add(session)
             }
+        }
+        removeSessions.forEach {
+            remove(it)
         }
     }
 
